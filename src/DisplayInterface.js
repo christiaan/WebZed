@@ -1,1 +1,2 @@
-var DisplayInterface = new Interface("DisplayInterface", ["paint"]);
+var DisplayInterface = new Interface("DisplayInterface",
+		["paint", "paintStart", "paintEnd"]);
