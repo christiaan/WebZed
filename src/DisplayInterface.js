@@ -1,0 +1,1 @@
+var DisplayInterface = new Interface("DisplayInterface", ["paint"]);
