@@ -26,13 +26,10 @@ function ImageSource(node, width, height, speed, direction) {
 		throw new Error("Node is not finished loading yet");
 	}
 	
-	if(!node.width) {
-		throw new Error("Node has no valid width");
+	if(!node.width || !node.height) {
+		throw new Error("Node has no valid dimensions");
 	}
-	if(!node.height) {
-		throw new Error("Node has no valid height");
-	}
-	if(width.constructure !== Number) {
+	if(width.constructor !== Number) {
 		throw new TypeError("Width should be a number");
 	}
 	if(height.constructor !== Number) {
