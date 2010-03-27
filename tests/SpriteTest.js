@@ -1,6 +1,6 @@
 module("Sprite");
 test("Constructor", function(){
-	var img = new Image();
+	var img = new ImageSource();
 	img.src = "../media/img/planets/arctic.png";
 	
 	var tmp = new Sprite(img, 16, 32);
