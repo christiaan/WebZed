@@ -8,12 +8,6 @@
  * @param node
  */
 function CanvasDisplay(width, height, bgcolor, node) {
-	if(width.constructor !== Number) {
-		throw new TypeError("Width should be a Number");
-	}
-	if(height.constructor !== Number) {
-		throw new TypeError("Height should be a Number");
-	}
 	if(!node) {
 		node = document.createElement("canvas");
 	}
@@ -24,23 +18,37 @@ function CanvasDisplay(width, height, bgcolor, node) {
 		throw new Error("Browser doesnt support Canvas.getContext()");
 	}
 	
-	node.width = width;
-	node.height = height;
 	
-	this.width = width;
-	this.height = height;
-	this._bgcolor = bgcolor;
+	this.bgcolor = bgcolor;
 	this._node = node;
-	
 	this._context = node.getContext("2d");
+	
+	this.resize(width, height);
 };
 
 CanvasDisplay.prototype = {
 	/**
+	 * Resizes the display to the given dimensions
+	 * @param width
+	 * @param height
+	 */
+	resize : function(width, height) {
+		if(width.constructor !== Number) {
+			throw new TypeError("Width should be a Number");
+		}
+		if(height.constructor !== Number) {
+			throw new TypeError("Height should be a Number");
+		}
+		this.width = width;
+		this.height = height;
+		this._node.width = width;
+		this._node.height = height;
+	},
+	/**
 	 * Called before a paint run
 	 */
 	paintStart : function() {
-		if(!this._bgcolor) {
+		if(!this.bgcolor) {
 			// According to W3C spec the canvas should be wiped clean
 			// when the dimensions are being assigned
 			this._node.width = this._node.width;
@@ -49,7 +57,7 @@ CanvasDisplay.prototype = {
 		else {
 			// set the background color
 			var prevFillstyle = this._context.fillStyle;
-			this._context.fillStyle = this._bgcolor;
+			this._context.fillStyle = this.bgcolor;
 			this._context.fillRect(0, 0, this.width, this.height);
 			this._context.fillStyle = prevFillstyle;
 		}

@@ -1,6 +1,7 @@
 /**
  * 
  * @constructor
+ * @implements PaintableInterface
  */
 function Sprite(image, left, top, children, onpaint) {
 	if(!image || !(image instanceof ImageSource)) {
@@ -77,7 +78,10 @@ Sprite.prototype = {
 	},
 	/**
 	 * Checks if we collide with other sprites
-	 * @param sprites
+	 * WARNING this does not take parent offsets into account like painting does
+	 * so only use this with sprites which are in the same PaintableCollection
+	 * 
+	 * @param sprites array with sprites to test against
 	 * @return array with sprites that collided
 	 */
 	collidesWith : function(sprites) {

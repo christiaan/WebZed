@@ -1,16 +1,15 @@
 /**
- * SpritePainter class
- * @param sprites The sprite collection that should be painted
- * @param display The display at which the sprites should paint
+ * The Painter paints a paintable at a display with a given frequency
+ * 
+ * @param paintable The paintable(s) that should be painted
+ * @param display The display at which the paintable(s) should be painted
  * @constructor
  */
-function SpritePainter(sprites, display) {
-	if(!(sprites instanceof SpriteCollection)) {
-		throw new TypeError("Sprites should be a valid SpriteCollection");
-	}
+function Painter(paintable, display) {
+	Interface.ensureImplements(paintable, PaintableInterface);
 	Interface.ensureImplements(display, DisplayInterface);
 	
-	this._sprites = sprites;
+	this._paintable = paintable;
 	this._display = display;
 		
 	this._time = null;
@@ -19,11 +18,11 @@ function SpritePainter(sprites, display) {
 };
 
 /**
- * Starts the painting loop at the configured interval
+ * Starts the painting loop
  * @param frequency Time between paints in milliseconds
- * @param time Time offset in milliseconds to start from
+ * @param time Time offset in milliseconds to start from (when paused for ex)
  */
-SpritePainter.prototype.start = function(frequency, time) {
+Painter.prototype.start = function(frequency, time) {
 	if(frequency.constructor !== Number) {
 		throw new TypeError("frequency should be of type Number");
 	}
@@ -38,24 +37,22 @@ SpritePainter.prototype.start = function(frequency, time) {
 	this._interval = setInterval(function(late){
 		self._time += (frequency + late);
 		self._display.paintStart();
-		self._sprites.paint(self._display, self._time);
+		self._paintable.paint(self._display, self._time);
 		self._display.paintEnd();
 	}, frequency);
 	
-	this._sprites.paint(this._display, this._time);
+	this._paintable.paint(this._display, this._time);
 };
 
 /**
  * Stops the painting loop
  * @return int Returns the time at which the loop stopped
  */
-SpritePainter.prototype.stop = function() {
-	if(this._tick === 0) {
+Painter.prototype.stop = function() {
+	if(!this._interval) {
 		throw new Error("Paint loop hasn't started");
 	}
-	if(this._interval) {
-		clearInterval(this._interval);
-	}
+	clearInterval(this._interval);
 	var time = this._time;
 	this._time = 0;
 	return time;
