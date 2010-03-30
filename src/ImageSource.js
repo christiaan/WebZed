@@ -5,10 +5,8 @@
  * @param node The DOMnode being used
  * @param width width of a frame on the node
  * @param height height of a frame on the node
- * @param speed amount of time between frames (if animated)
- * @param direction direction of the animation (default vertical)
  */
-function ImageSource(node, width, height, speed, direction) {
+function ImageSource(node, width, height) {
 	if(!node || !node.nodeName) {
 		throw new Error("No DOMnode given");
 	}
@@ -35,12 +33,7 @@ function ImageSource(node, width, height, speed, direction) {
 	if(height.constructor !== Number) {
 		throw new TypeError("Height should be a number");
 	}
-	if(speed && speed.constructor !== Number) {
-		throw new TypeError("Speed should be a number");
-	}
-	if(direction && direction !== ImageSource.vertical && direction !== ImageSource.horizontal) {
-		throw new TypeError("Direction should either be vertical or horizontal");
-	}
+	
 	if(node.width % width !== 0) {
 		throw new Error("DOMnode width and given width do not fit");
 	}
@@ -51,8 +44,6 @@ function ImageSource(node, width, height, speed, direction) {
 	this.node = node;
 	this.width = width;
 	this.height = height;
-	this.speed = speed || 0;
-	this.direction = direction || ImageSource.vertical;
 	
 	this.horizontalFrames = (this.node.width / this.width) - 1;
 	this.verticalFrames = (this.node.height / this.height) - 1;

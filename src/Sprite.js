@@ -5,10 +5,11 @@
  * @param {ImageSource} image
  * @param {Number} left
  * @param {Number} top
+ * @param {Array} behaviors
  * @param {Function} onpaint
  * @param {PaintableCollection} children
  */
-function Sprite(image, left, top, onpaint, children) {
+function Sprite(image, left, top, behaviors, onpaint, children) {
 	if(!image || !(image instanceof ImageSource)) {
 		throw new TypeError("image should be a ImageSource object");
 	}
@@ -18,6 +19,11 @@ function Sprite(image, left, top, onpaint, children) {
 	if(top.constructor !== Number) {
 		throw new TypeError("top should be a Number");
 	}
+	
+	if(behaviors && !(behaviors instanceof Array)) {
+		throw new TypeError("behaviors should be a Array");
+	}
+	
 	if(onpaint && !(onpaint instanceof Function)) {
 		throw new TypeError("onpaint should be a Function");
 	}
@@ -30,8 +36,11 @@ function Sprite(image, left, top, onpaint, children) {
 	this.top = top;
 	this.onpaint = onpaint;
 	this.children = children || new PaintableCollection();
+	this.behaviors = behaviors || new Array();
 	
 	this.frame = 0;
+	this.source_left = 0;
+	this.source_top = 0;
 };
 
 Sprite.prototype = {
@@ -43,28 +52,8 @@ Sprite.prototype = {
 	 * @param top Offset from the top on the display
 	 */
 	paint : function(display, time, left, top) {
-		var source_left = 0, source_top = 0;
-	
-		if(this.image.speed !== 0) {
-			if(this.image.direction === ImageSource.horizontal) {
-				source_left = (Math.round(time / this.image.speed) %
-					this.image.horizontalFrames) * this.image.width; 
-			}
-			else {
-				source_top = (Math.round(time / this.image.speed) %
-					this.image.verticalFrames) * this.image.height; 
-			}
-		}
-		
-		if(this.frame !== 0) {
-			if(this.image.direction === ImageSource.horizontal) {
-				source_top = (this.frame % this.image.verticalFrames) *
-					this.image.height; 
-			}
-			else {
-				source_left = (this.frame % this.image.horizontalFrames) *
-					this.image.width; 
-			}
+		for(var i = 0, len = this.behaviors.length; i < len; ++i) {
+			this.behaviors[i].updateSprite(this, display, time);
 		}
 		
 		if(this.onpaint) {
@@ -78,7 +67,7 @@ Sprite.prototype = {
 	
 		display.paintImage(this.image.node, left, top,
 				this.image.width, this.image.height,
-				source_left, source_top);
+				this.source_left, this.source_top);
 		
 		this.children.paint(display, time, left, top);
 	},
