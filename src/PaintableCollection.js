@@ -15,96 +15,30 @@ function PaintableCollection(paintables) {
 };
 
 // extend array
-PaintableCollection.prototype = new Array();
+PaintableCollection.prototype = new ObjectCollection();
 
 /**
- * Pushes a paintable on the end of the collection
- * @param {PaintableInterface} paintable
- * @return {Number} New length of the collection
+ * Overwrite the default push and check if new item implements PaintableInterface
  */
-PaintableCollection.prototype.push = function(paintable) {
-	Interface.ensureImplements(paintable, PaintableInterface);
-	if(this.contains(paintable)) {
-		throw new Error("Paintable is already in collection");
-	}
-	return Array.prototype.push.call(this, paintable);
+PaintableCollection.prototype.push = function(item) {
+	Interface.ensureImplements(item, PaintableInterface);
+	return ObjectCollection.prototype.push.call(this, item);
 };
 
 /**
- * Unshifts a paintable to the start of the collection
- * @param {PaintableInterface} paintable
- * @return {Number} New length of the collection
+ * Overwrite the default unshift to check if an item implements PaintableInterface
  */
-PaintableCollection.prototype.unshift = function(paintable) {
-	Interface.ensureImplements(paintable, PaintableInterface);
-	if(this.contains(paintable)) {
-		throw new Error("Paintable is already in collection");
-	}
-	return Array.prototype.unshift.call(this, paintable);
+PaintableCollection.prototype.unshift = function(item) {
+	Interface.ensureImplements(item, PaintableInterface);
+	return ObjectCollection.prototype.unshift.call(this, item);
 };
 
 /**
- * Add a Paintable to the stack at the given position
- * @param {Number} position
- * @param {PaintableInterface} paintable
+ * Overwrite the addAt method to check if the item implements PaintableInterface
  */
-PaintableCollection.prototype.addAt = function(position, paintable) {
-	if(position.constructor !== Number) {
-		throw new TypeError("position should be a Number");
-	}
-	Interface.ensureImplements(paintable, PaintableInterface);
-	if(this.contains(paintable)) {
-		throw new Error("Paintable is already in collection");
-	}
-	
-	this.splice(position, 0, paintable);
-};
-
-/**
- * Add a Paintable before a given other paintable in the stack
- * @param {PaintableInterface} before
- * @param {PaintableInterface} paintable
- */
-PaintableCollection.prototype.addBefore = function(before, paintable) {
-	before = this.indexOf(before);
-	if(before === -1) {
-		throw new Error("Paintable to add before not found");
-	}
-	this.addAt(before, paintable);
-};
-
-/**
- * Add a Paintable after a given other paintable in the stack
- * @param {PaintableInterface} after
- * @param {PaintableInterface} paintable
- */
-PaintableCollection.prototype.addAfter = function(after, paintable) {
-	after = this.indexOf(after);
-	if(after === -1) {
-		throw new Error("Paintable to add after not found");
-	}
-	this.addAt(after+1, paintable);
-};
-
-/**
- * Removes a paintable
- * @param {PaintableInterface} paintable
- */
-PaintableCollection.prototype.remove = function(paintable) {
-	var i = this.indexOf(paintable);
-	if(i === -1) {
-		throw new Error("Paintable not found");
-	}
-	this.splice(i, 1);
-};
-
-/**
- * Tells if the collection contains the paintable
- * @param {PaintableInterface} paintable
- * @return bool
- */
-PaintableCollection.prototype.contains = function(paintable) {
-	return this.indexOf(paintable) !== -1;
+PaintableCollection.prototype.addAt = function(position, item) {
+	Interface.ensureImplements(item, PaintableInterface);
+	return ObjectCollection.prototype.addAt.call(this, position, item);
 };
 
 /**
