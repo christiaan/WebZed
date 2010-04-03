@@ -6,12 +6,12 @@ var mockImg = {
 	height : 384,
 	src : "../media/img/planets/arctic.png"
 };
-var imgSrc = new ImageSource(mockImg, 16, 32, 1000);
+var imgSrc = new ImageSource(mockImg, 16, 32);
 var onpaint = function(){ onpaint.context = this; onpaint.args = arguments; return onpaint.retval; };
 onpaint.retval = true;
 	
 module("Sprite");
-test("Constructor", 13, function(){
+test("Constructor", 14, function(){
 	var thrown = false;
 	try {
 		new Sprite();
@@ -46,7 +46,15 @@ test("Constructor", 13, function(){
 
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, "onpaint");
+		new Sprite(imgSrc, 16, 32, "behaviors");
+	} catch (e) {
+		thrown = true;
+	}
+	ok(thrown, "TypeError thrown if behaviors is no array and set");
+	
+	thrown = false;
+	try {
+		new Sprite(imgSrc, 16, 32, [], "onpaint");
 	} catch (e) {
 		thrown = true;
 	}
@@ -54,7 +62,7 @@ test("Constructor", 13, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, onpaint, {});
+		new Sprite(imgSrc, 16, 32, [], onpaint, {});
 	} catch (e) {
 		thrown = true;
 	}
@@ -62,13 +70,13 @@ test("Constructor", 13, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, onpaint, new PaintableCollection());
+		new Sprite(imgSrc, 16, 32, [], onpaint, new PaintableCollection());
 	} catch (e) {
 		thrown = true;
 	}
 	ok(!thrown, "Succesfully create a sprite");
 	
-	var tmp = new Sprite(imgSrc, 16, 32, onpaint);
+	var tmp = new Sprite(imgSrc, 16, 32, [], onpaint);
 	
 	same(tmp.image, imgSrc, "Img is set as source");
 	equals(tmp.left, 16, "Left offset is sucessfully set");
@@ -80,7 +88,7 @@ test("Constructor", 13, function(){
 
 test("Paint", 26, function(){
 	var mockDisplay = {"paintImage" : function(){ this.args = arguments; }};
-	var obj = new Sprite(imgSrc, 200, 300, onpaint);
+	var obj = new Sprite(imgSrc, 200, 300, undefined, onpaint);
 	
 	obj.paint(mockDisplay, 0);
 	same(mockDisplay.args[0], mockImg, "First arg should be the image node");
@@ -97,14 +105,23 @@ test("Paint", 26, function(){
 	equals(onpaint.args[2], undefined, "3th the left offset");
 	equals(onpaint.args[3], undefined, "4th the top offset");
 	
+	var animBehavior = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.vertical, 1000);
+	obj.behaviors.push(animBehavior);
 	obj.paint(mockDisplay, 1000);
 	equals(mockDisplay.args[6], 32, "default animation axis is vertical the source top offset should be to the next frame");
-	obj.frame = 1;
+	
+	var frameBehavior = new SpriteBehaviorFrame(SpriteBehaviorFrame.horizontal);
+	obj.behaviors.push(frameBehavior);
+	frameBehavior.frame = 1;
+	
 	obj.paint(mockDisplay, 2000);
 	equals(mockDisplay.args[5], 16, "At the 2nd frame");
 	equals(mockDisplay.args[6], 64, "And at the 3th frame of the animation");
 	
-	obj.image.direction = ImageSource.horizontal;
+	
+	animBehavior.direction = SpriteBehaviorAnimate.horizontal;
+	frameBehavior.direction = SpriteBehaviorFrame.vertical;
+	
 	obj.paint(mockDisplay, 1000);
 	equals(mockDisplay.args[5], 16, "axis set to horizontal the source left offset should be to the next frame");
 	obj.paint(mockDisplay, 2000);
@@ -136,7 +153,7 @@ test("Paint", 26, function(){
 
 test("InViewport", 9, function() {
 	var mockDisplay = {width: 640, height: 480};
-	var obj = new Sprite(imgSrc, 200, 300, onpaint);
+	var obj = new Sprite(imgSrc, 200, 300);
 	
 	ok(obj.inViewport(mockDisplay), "somewhere in the middle");
 	obj.left = -16;
@@ -161,8 +178,8 @@ test("InViewport", 9, function() {
 });
 
 test("CollidesWith", function() {
-	var obj = new Sprite(imgSrc, 10, 10, onpaint);
-	var obj2 = new Sprite(imgSrc, 200, 300, onpaint);
+	var obj = new Sprite(imgSrc, 10, 10);
+	var obj2 = new Sprite(imgSrc, 200, 300);
 	
 	ok(obj.collidesWith([obj2]).length === 0, "No collision");
 	obj.left = 208;
