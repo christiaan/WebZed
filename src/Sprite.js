@@ -20,8 +20,8 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 		throw new TypeError("top should be a Number");
 	}
 	
-	if(behaviors && !(behaviors instanceof Array)) {
-		throw new TypeError("behaviors should be a Array");
+	if(behaviors && !(behaviors instanceof ObjectCollection)) {
+		throw new TypeError("behaviors should be a ObjectCollection");
 	}
 	
 	if(onpaint && !(onpaint instanceof Function)) {
@@ -36,7 +36,7 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 	this.top = top;
 	this.onpaint = onpaint;
 	this.children = children || new PaintableCollection();
-	this.behaviors = behaviors || new Array();
+	this.behaviors = behaviors || new ObjectCollection();
 	
 	this.frame = 0;
 	this.source_left = 0;

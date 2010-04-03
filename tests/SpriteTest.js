@@ -54,7 +54,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, [], "onpaint");
+		new Sprite(imgSrc, 16, 32, new ObjectCollection(), "onpaint");
 	} catch (e) {
 		thrown = true;
 	}
@@ -62,7 +62,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, [], onpaint, {});
+		new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint, {});
 	} catch (e) {
 		thrown = true;
 	}
@@ -70,13 +70,13 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, [], onpaint, new PaintableCollection());
+		new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint, new PaintableCollection());
 	} catch (e) {
 		thrown = true;
 	}
 	ok(!thrown, "Succesfully create a sprite");
 	
-	var tmp = new Sprite(imgSrc, 16, 32, [], onpaint);
+	var tmp = new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint);
 	
 	same(tmp.image, imgSrc, "Img is set as source");
 	equals(tmp.left, 16, "Left offset is sucessfully set");
