@@ -107,6 +107,7 @@ test("Paint", 26, function(){
 	
 	var animBehavior = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.vertical, 1000);
 	obj.behaviors.push(animBehavior);
+	obj.paint(mockDisplay, 0);
 	obj.paint(mockDisplay, 1000);
 	equals(mockDisplay.args[6], 32, "default animation axis is vertical the source top offset should be to the next frame");
 	
