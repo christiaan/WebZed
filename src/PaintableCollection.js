@@ -14,7 +14,7 @@ function PaintableCollection(paintables) {
 	}
 };
 
-// extend array
+// extend ObjectCollection
 PaintableCollection.prototype = new ObjectCollection();
 
 /**

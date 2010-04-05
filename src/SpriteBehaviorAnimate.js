@@ -29,6 +29,13 @@ SpriteBehaviorAnimate.vertical = 1;
 SpriteBehaviorAnimate.horizontal = 2;
 
 SpriteBehaviorAnimate.prototype = {
+	/**
+	 * Method that will run before a sprite paints itself on a display
+	 * 
+	 * @param {Sprite} sprite the sprite that is about to write
+	 * @param {DisplayInterface} display the display the spite has to write to
+	 * @param {Number} time amount of milliseconds
+	 */
 	updateSprite : function(sprite, display, time) {
 		// The animation should start from the first call
 		if(false === this.start_time) {

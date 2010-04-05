@@ -41,7 +41,7 @@ test("Constructor", function() {
 test("Push", 10, function(){
 	var obj = new ObjectCollection();
 	
-	thrown = false;
+	var thrown = false;
 	try {
 		obj.push(mockObj);
 	} catch (e)	{
@@ -84,7 +84,7 @@ test("Unshift", 6, function(){
 	same(obj[1], mockObj, "Mock is 2nd item now");
 	same(obj[0], mockCollection, "Collection is the first item");
 	
-	thrown = false;
+	var thrown = false;
 	try {
 		obj.unshift(mockObj);
 	} catch (e) {
