@@ -36,7 +36,7 @@ Interface.ensureImplements = function(object) {
         for(var j = 0, methodsLen = interf.methods.length; j < methodsLen; j++) {
             var method = interf.methods[j];
             if(!object[method] || typeof object[method] !== 'function') {
-                throw new Error("Function Interface.ensureImplements: object "+
+                throw new TypeError("Function Interface.ensureImplements: object "+
 					"does not implement the " + interf.name+
 					" interface. Method " + method + " was not found.");
             }
