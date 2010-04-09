@@ -1,3 +1,3 @@
 var PaintableInterface = new Interface("PaintableInterface", [
-	"paint" /* display, time */
+	"paint" /* display, time, left, top */
 ]);

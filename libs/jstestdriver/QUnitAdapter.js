@@ -15,9 +15,16 @@ you need to set it up and tear it down in each test.
 
 */
 (function() {
-	var QUnitTestCase;
+	if(!("equiv" in window)) {
+		throw new Error("QUnitAdapter.js needs equiv.js");
+	}
 	
+	var QUnitTestCase;
+
     window.module = function(name, lifecycle) {
+    	if(arguments.length < 1) {
+    		throw new Error("module requires at least 1 param");
+    	}
         QUnitTestCase = TestCase(name);
         QUnitTestCase.prototype.lifecycle = lifecycle || {};
     };
@@ -26,9 +33,8 @@ you need to set it up and tear it down in each test.
     	if(arguments.length < 2) {
     		throw new Error("test requires at least 2 params");
     	}
-    	
-    	QUnitTestCase.prototype['test '+name] = function() {
-        	if(this.lifecycle.setup) {
+    	QUnitTestCase.prototype['test ' + name] = function() {
+        	if("setup" in this.lifecycle) {
         		this.lifecycle.setup();
         	}
         	if(expected.constructor === Number) {
@@ -39,7 +45,7 @@ you need to set it up and tear it down in each test.
        		}
        		test.call(this.lifecycle);
        		
-			if(this.lifecycle.teardown) {
+			if("teardown" in this.lifecycle) {
 				this.lifecycle.teardown();
 			}
 		};

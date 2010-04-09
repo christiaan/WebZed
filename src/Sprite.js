@@ -38,7 +38,6 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 	this.children = children || new PaintableCollection();
 	this.behaviors = behaviors || new ObjectCollection();
 	
-	this.frame = 0;
 	this.source_left = 0;
 	this.source_top = 0;
 };

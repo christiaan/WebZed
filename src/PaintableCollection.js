@@ -46,7 +46,6 @@ PaintableCollection.prototype.addAt = function(position, item) {
  */
 PaintableCollection.prototype.paint = function() {
 	for(var i = 0, len = this.length; i < len; i++) {
-		// TODO replace with a plain paint call when arguments are settled
 		this[i].paint.apply(this[i], arguments);
 	}
 };
