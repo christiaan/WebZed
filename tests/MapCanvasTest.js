@@ -1,16 +1,26 @@
 module("Map Canvas", {
 	setup: function() {
 		this.tiles = [];
+		this.tiles.length = 300;
 		this.tilesets = [];
-		this.map = new Map(20, 15, 16, 16, this.tiles, this.tilesets);
-		this.canvas = new Canvas(320, 240);
-		this.obj = new MapCanvas(this.map, this.canvas);
+		this.map = {
+			width : 20,
+			height : 15,
+			tileWidth : 16,
+			tileHeight : 16,
+			tiles : this.tiles,
+			tilesets: this.tilesets
+		};
+		this.canvas = {
+			width : 320,
+			height: 240
+		};
 	}
 });
 
 test("throw error if map width does not correspond with canvas", function(){
 	var thrown = false;
-	this.canvas.resize(321, 240);
+	this.canvas.width = 321;
 	try {
 		new MapCanvas(this.map, this.canvas);
 	} catch (e) {
@@ -21,7 +31,7 @@ test("throw error if map width does not correspond with canvas", function(){
 
 test("throw error if map height does not correspond with canvas", function() {
 	var thrown = false;
-	this.canvas.resize(320, 2234);
+	this.canvas.height = 2234;
 	try {
 		new MapCanvas(this.map, this.canvas);
 	} catch (e) {
@@ -29,3 +39,4 @@ test("throw error if map height does not correspond with canvas", function() {
 	}
 	ok(thrown);
 });
+
