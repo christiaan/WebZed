@@ -18,30 +18,33 @@ MapCanvas.prototype = {
 	paintTiles : function() {
 		for(var i = 0; i < this.map.tiles.length; i++) {
 			var left, top, srcLeft, srcTop, srcNode;
-			left = (i % this.width) * this.tileWidth;
-			top = Math.floor(i / this.width) * this.tileHeight;
+			left = (i % this.map.width) * this.map.tileWidth;
+			top = Math.floor(i / this.map.width) * this.map.tileHeight;
 			
 			var g = this.map.tiles[i];
-			for(var t = 0; t < this.map.tilesets.length; t++) {
-				var tileset = this.map.tilesets[t];
-				var tilesetWidth = (tileset.width / this.tileWidth);
-				var count = (tilesetWidth * (tileset.height / this.tileHeight));
-				if(g > count) {
-					g -= count;
+			if(g) {
+				for(var t = 0; t < this.map.tilesets.length; t++) {
+					var tileset = this.map.tilesets[t];
+					var tilesetWidth = (tileset.width / this.map.tileWidth);
+					var count = (tilesetWidth * (tileset.height / this.map.tileHeight));
+					if(g > count) {
+						g -= count;
+						srcNode = false;
+					}
+					else {
+						srcNode = tileset;
+						srcLeft = (g % tilesetWidth) * this.map.tileWidth;
+						srcTop = Math.floor(g / tilesetWidth) * this.map.tileHeight;
+					}
+				}
+				
+				if(srcNode) {
+					this.canvas.drawImage(srcNode, left, top,
+						this.map.tileWidth, this.map.tileHeight, srcLeft, srcTop);
 				}
 				else {
-					srcNode = tileset;
-					srcLeft = (g % tilesetWidth) * this.tileWidth;
-					srcTop = Math.floor(g / tilesetWidth) * this.tileHeight;
+					throw new Error("no tileset found for tile id "+g);
 				}
-			}
-			
-			if(srcNode) {
-				this.canvas.drawImage(srcNode, left, top,
-					this.tileWidth, this.tileHeight, srcLeft, srcTop);
-			}
-			else {
-				throw new Error("tile with unknown tileid "+g);
 			}
 		}
 	}	
