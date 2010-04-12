@@ -2,13 +2,15 @@
  * A Display implemented with Canvas
  * @constructor
  * @type DisplayInterface
- * @param width
- * @param height
- * @param bgcolor
- * @param node
+ * @param {Number} width
+ * @param {Number} height
+ * @param {String} bgcolor
+ * @param {Canvas} canvas
  */
-function CanvasDisplay(width, height, bgcolor) {
-	this.canvas = new Canvas(width, height);	
+function CanvasDisplay(width, height, bgcolor, canvas) {
+	this.width = width;
+	this.height = height;
+	this.canvas = canvas || new Canvas(width, height);
 	this.bgcolor = bgcolor;
 };
 

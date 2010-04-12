@@ -59,3 +59,43 @@ test("tiles are correctly assigned", function() {
 test("tilesets are correctly assigned", function() {
 	same(this.obj.tilesets, this.tilesets);
 });
+
+module("Map paintTile() on display", {setup: function() {
+	this.tiles = [];
+	this.tiles.length = 300;
+	this.tilesets = [];
+	this.mockDisplay = {
+		paintImage: function() {
+			this.args.push(arguments);
+		},
+		args: []
+	};
+	this.obj = new Map(20, 15, 16, 16, this.tiles, this.tilesets);
+}});
+
+test("paintTile throws an error when an unknown gid is encountered", function() {
+	this.tiles[0] = 400;
+	var thrown = false;
+	try {
+		this.obj.paintTile(0, 0, this.mockDisplay, 0, 0);
+	} catch (e) {
+		thrown = e instanceof Error;
+	}
+	ok(thrown);
+});
+
+//test("paint draws the tiles on the canvas using drawImage", function() {
+//	this.tiles[299] = 4;
+//	this.obj.paintMap();
+//	
+//	equals(this.canvas.args.length, 1);
+//	equals(this.canvas.args[0].length, 7);
+//	
+//	same(this.canvas.args[0][0], this.tilesetMock);
+//	equals(this.canvas.args[0][1], (299 % 20) * 16);
+//	equals(this.canvas.args[0][2], Math.floor(299 / 20) * 16);
+//	equals(this.canvas.args[0][3], 16);
+//	equals(this.canvas.args[0][4], 16);
+//	equals(this.canvas.args[0][5], (4 % (640 / 16)) * 16);
+//	equals(this.canvas.args[0][6], 0);
+//});
