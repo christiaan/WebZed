@@ -4,7 +4,7 @@
  * @param {Number} height
  * @constructor
  */
-function Canvas(width, height) {
+WebZed.Canvas = function (width, height) {
 	this.node = document.createElement("canvas");
 	if (!("getContext" in this.node)) {
 		throw new Error("Browser doesnt support Canvas.getContext()");
@@ -12,9 +12,9 @@ function Canvas(width, height) {
 	this.context = this.node.getContext("2d");
 	
 	this.resize(width, height);
-}
+};
 
-Canvas.prototype = {
+WebZed.Canvas.prototype = {
 	/**
 	 * Resizes the display to the given dimensions
 	 * @param {Number} width

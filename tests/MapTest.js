@@ -8,7 +8,7 @@ module("Map constructor throws", {
 test("a Error when there are not enough tiles to fill the map", function() {
 	var thrown = false;
 	try {
-		new Map(20, 15, 16, 16, this.tiles, this.tilesets);
+		new WebZed.Map(20, 15, 16, 16, this.tiles, this.tilesets);
 	} catch (e) {
 		thrown = e instanceof Error;
 	}
@@ -20,7 +20,7 @@ test("a Error when there are tiles with tile id's not in the tilesets", function
 	this.tiles.length = 100;
 	this.tiles[3] = 4;
 	try {
-		new Map(10, 10, 16, 16, this.tiles, this.tilesets);
+		new WebZed.Map(10, 10, 16, 16, this.tiles, this.tilesets);
 	} catch(e) {
 		thrown = e instanceof Error;
 	}
@@ -32,7 +32,7 @@ module("Map constructor", {
 		this.tiles = [];
 		this.tiles.length = 300;
 		this.tilesets = [];
-		this.obj = new Map(20, 15, 16, 18, this.tiles, this.tilesets);
+		this.obj = new WebZed.Map(20, 15, 16, 18, this.tiles, this.tilesets);
 	}
 });
 
@@ -70,7 +70,7 @@ module("Map paintTile() on display", {setup: function() {
 		},
 		args: []
 	};
-	this.obj = new Map(20, 15, 16, 16, this.tiles, this.tilesets);
+	this.obj = new WebZed.Map(20, 15, 16, 16, this.tiles, this.tilesets);
 }});
 
 test("throws an error when an unknown gid is encountered", function() {

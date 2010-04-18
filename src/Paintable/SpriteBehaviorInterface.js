@@ -1,3 +1,3 @@
-var SpriteBehaviorInterface = new Interface("SpriteBehaviorInterface", [
+WebZed.SpriteBehaviorInterface = new WebZed.Interface("SpriteBehaviorInterface", [
 	"updateSprite"
 ]);

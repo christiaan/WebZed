@@ -1,4 +1,4 @@
-function Map(width, height, tileWidth, tileHeight, tiles, tilesets) {
+WebZed.Map = function (width, height, tileWidth, tileHeight, tiles, tilesets) {
 	var i, count = 0;
 	
 	if (width * height !== tiles.length) {
@@ -6,8 +6,8 @@ function Map(width, height, tileWidth, tileHeight, tiles, tilesets) {
 	}
 		
 	for (i = 0; i < tilesets.length; i += 1) {
-		count += ((tilesets[i].width / tileWidth) *
-			(tilesets[i].height / tileHeight));
+		count += (tilesets[i].width / tileWidth) *
+			(tilesets[i].height / tileHeight);
 	}
 	
 	for (i = 0; i < tiles.length; i += 1) {
@@ -23,9 +23,9 @@ function Map(width, height, tileWidth, tileHeight, tiles, tilesets) {
 	
 	this.tiles = tiles;
 	this.tilesets = tilesets;
-}
+};
 
-Map.prototype = {
+WebZed.Map.prototype = {
 	paintTile: function (left, top, display, leftOffset, topOffset) {
 		var gid = this.tiles[(top * this.width) + left],
 		srcNode, srcLeft, srcTop, t, tileset, tilesetWidth, count;

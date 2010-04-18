@@ -1,0 +1,31 @@
+<project name="WebZed" default="webzed" basedir=".">
+
+	<loadfile property="version" srcfile="version.txt" />
+	<property description="Folder for jquery and min target" name="dist" value="./dist" />
+	<property name="WZ" value="${dist}/WebZed.js" />
+
+	<target name="webzed" description="Main WebZed build, concatenates source files and replaces @VERSION">
+		<echo message="Building WebZed" />
+		<mkdir dir="${dist}" />
+		<concat destfile="${WZ}">
+			<fileset file="src/intro.js" />
+			
+			<fileset file="src/WebZed.js" />
+			<fileset file="src/Interval.js" />
+			<fileset file="src/Canvas.js" />
+			<fileset file="src/ObjectPool.js" />
+			<fileset file="src/ObjectCollection.js" />
+			<fileset file="src/Display/*.js" />
+			<fileset file="src/Map/*.js" />
+			<fileset file="src/Paintable/*.js" />
+			
+			<fileset file="src/outro.js" />
+		</concat>
+		<replaceregexp match="@VERSION" replace="${version}"
+			flags="g" byline="true" file="${WZ}" />
+		<replaceregexp match="Date: " replace="Date: ${date}"
+			file="${WZ}" />
+		<echo message="${WZ} built." />
+	</target>
+
+</project>

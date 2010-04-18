@@ -6,7 +6,7 @@
  * @param width width of a frame on the node
  * @param height height of a frame on the node
  */
-function ImageSource(node, width, height) {
+WebZed.ImageSource = function (node, width, height) {
 	if (!node || !node.nodeName) {
 		throw new Error("No DOMnode given");
 	}
@@ -47,7 +47,7 @@ function ImageSource(node, width, height) {
 	
 	this.horizontalFrames = (this.node.width / this.width) - 1;
 	this.verticalFrames = (this.node.height / this.height) - 1;
-}
+};
 
-ImageSource.vertical = "vertical";
-ImageSource.horizontal = "horizontal";
+WebZed.ImageSource.vertical = "vertical";
+WebZed.ImageSource.horizontal = "horizontal";

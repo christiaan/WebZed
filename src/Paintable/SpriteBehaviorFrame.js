@@ -6,21 +6,21 @@
  * @param frame
  * @implements SpriteBehaviorInterface
  */
-function SpriteBehaviorFrame(direction, frame) {
-	if(direction !== SpriteBehaviorFrame.vertical &&
-	direction !== SpriteBehaviorFrame.horizontal) {
+WebZed.SpriteBehaviorFrame = function (direction, frame) {
+	if(direction !== WebZed.SpriteBehaviorFrame.vertical &&
+	direction !== WebZed.SpriteBehaviorFrame.horizontal) {
 		throw new TypeError("Direction should either be vertical or horizontal");
 	}
 	this.direction = direction;
 	this.frame = frame || 0;
-}
+};
 
-SpriteBehaviorFrame.vertical = 1;
-SpriteBehaviorFrame.horizontal = 2;
+WebZed.SpriteBehaviorFrame.vertical = 1;
+WebZed.SpriteBehaviorFrame.horizontal = 2;
 
-SpriteBehaviorFrame.prototype = {
+WebZed.SpriteBehaviorFrame.prototype = {
 	updateSprite : function(sprite, display, time) {
-		if(this.direction === SpriteBehaviorFrame.horizontal) {
+		if(this.direction === WebZed.SpriteBehaviorFrame.horizontal) {
 			sprite.source_left = (this.frame % sprite.image.horizontalFrames) *
 			sprite.image.width; 
 		}

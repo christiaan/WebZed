@@ -6,7 +6,7 @@ var mockImg = {
 	height : 384,
 	src : "../media/img/planets/arctic.png"
 };
-var imgSrc = new ImageSource(mockImg, 16, 32);
+var imgSrc = new WebZed.ImageSource(mockImg, 16, 32);
 var onpaint = function(){ onpaint.context = this; onpaint.args = arguments; return onpaint.retval; };
 onpaint.retval = true;
 	
@@ -14,7 +14,7 @@ module("Sprite");
 test("Constructor", 14, function(){
 	var thrown = false;
 	try {
-		new Sprite();
+		new WebZed.Sprite();
 	} catch (e) {
 		thrown = true;
 	}
@@ -22,7 +22,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite({});
+		new WebZed.Sprite({});
 	} catch (e) {
 		thrown = true;
 	}
@@ -30,7 +30,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, "16");
+		new WebZed.Sprite(imgSrc, "16");
 	} catch (e) {
 		thrown = true;
 	}
@@ -38,7 +38,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, "32");
+		new WebZed.Sprite(imgSrc, 16, "32");
 	} catch (e) {
 		thrown = true;
 	}
@@ -46,7 +46,7 @@ test("Constructor", 14, function(){
 
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, "behaviors");
+		new WebZed.Sprite(imgSrc, 16, 32, "behaviors");
 	} catch (e) {
 		thrown = true;
 	}
@@ -54,7 +54,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, new ObjectCollection(), "onpaint");
+		new WebZed.Sprite(imgSrc, 16, 32, new WebZed.ObjectCollection(), "onpaint");
 	} catch (e) {
 		thrown = true;
 	}
@@ -62,7 +62,7 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint, {});
+		new WebZed.Sprite(imgSrc, 16, 32, new WebZed.ObjectCollection(), onpaint, {});
 	} catch (e) {
 		thrown = true;
 	}
@@ -70,25 +70,25 @@ test("Constructor", 14, function(){
 	
 	thrown = false;
 	try {
-		new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint, new PaintableCollection());
+		new WebZed.Sprite(imgSrc, 16, 32, new WebZed.ObjectCollection(), onpaint, new WebZed.PaintableCollection());
 	} catch (e) {
 		thrown = true;
 	}
 	ok(!thrown, "Succesfully create a sprite");
 	
-	var tmp = new Sprite(imgSrc, 16, 32, new ObjectCollection(), onpaint);
+	var tmp = new WebZed.Sprite(imgSrc, 16, 32, new WebZed.ObjectCollection(), onpaint);
 	
 	same(tmp.image, imgSrc, "Img is set as source");
 	equals(tmp.left, 16, "Left offset is sucessfully set");
 	equals(tmp.top, 32, "Top offset is succesfully set");
 	same(tmp.onpaint, onpaint, "Onpaint succesfully set");
-	ok(tmp.children instanceof PaintableCollection, "Children is a PaintableCollection");
+	ok(tmp.children instanceof WebZed.PaintableCollection, "Children is a PaintableCollection");
 	equals(tmp.children.length, 0, "Children is empty by default");
 });
 
 test("Paint", 26, function(){
 	var mockDisplay = {"paintImage" : function(){ this.args = arguments; }};
-	var obj = new Sprite(imgSrc, 200, 300, undefined, onpaint);
+	var obj = new WebZed.Sprite(imgSrc, 200, 300, undefined, onpaint);
 	
 	obj.paint(mockDisplay, 0);
 	same(mockDisplay.args[0], mockImg, "First arg should be the image node");
@@ -105,13 +105,13 @@ test("Paint", 26, function(){
 	equals(onpaint.args[2], undefined, "3th the left offset");
 	equals(onpaint.args[3], undefined, "4th the top offset");
 	
-	var animBehavior = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.vertical, 1000);
+	var animBehavior = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 1000);
 	obj.behaviors.push(animBehavior);
 	obj.paint(mockDisplay, 0);
 	obj.paint(mockDisplay, 1000);
 	equals(mockDisplay.args[6], 32, "default animation axis is vertical the source top offset should be to the next frame");
 	
-	var frameBehavior = new SpriteBehaviorFrame(SpriteBehaviorFrame.horizontal);
+	var frameBehavior = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal);
 	obj.behaviors.push(frameBehavior);
 	frameBehavior.frame = 1;
 	
@@ -120,15 +120,15 @@ test("Paint", 26, function(){
 	equals(mockDisplay.args[6], 64, "And at the 3th frame of the animation");
 	
 	
-	animBehavior.direction = SpriteBehaviorAnimate.horizontal;
-	frameBehavior.direction = SpriteBehaviorFrame.vertical;
+	animBehavior.direction = WebZed.SpriteBehaviorAnimate.horizontal;
+	frameBehavior.direction = WebZed.SpriteBehaviorFrame.vertical;
 	
 	obj.paint(mockDisplay, 1000);
 	equals(mockDisplay.args[5], 16, "axis set to horizontal the source left offset should be to the next frame");
 	obj.paint(mockDisplay, 2000);
 	equals(mockDisplay.args[6], 32, "At the 2nd frame");
 	equals(mockDisplay.args[5], 32, "And at the 3th frame of the animation");
-	obj.image.direction = ImageSource.vertical;
+	obj.image.direction = WebZed.ImageSource.vertical;
 	
 	// Check if the child sprites get correctly called
 	var mockChild = {"paint" : function(){this.args = arguments;}};
@@ -154,7 +154,7 @@ test("Paint", 26, function(){
 
 test("InViewport", 9, function() {
 	var mockDisplay = {width: 640, height: 480};
-	var obj = new Sprite(imgSrc, 200, 300);
+	var obj = new WebZed.Sprite(imgSrc, 200, 300);
 	
 	ok(obj.inViewport(mockDisplay), "somewhere in the middle");
 	obj.left = -16;
@@ -179,8 +179,8 @@ test("InViewport", 9, function() {
 });
 
 test("CollidesWith", function() {
-	var obj = new Sprite(imgSrc, 10, 10);
-	var obj2 = new Sprite(imgSrc, 200, 300);
+	var obj = new WebZed.Sprite(imgSrc, 10, 10);
+	var obj2 = new WebZed.Sprite(imgSrc, 200, 300);
 	
 	ok(obj.collidesWith([obj2]).length === 0, "No collision");
 	obj.left = 208;

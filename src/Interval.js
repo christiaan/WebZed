@@ -6,7 +6,7 @@
  * @param {Number} elapsed
  * @constructor
  */
-function Interval(callback, delay, elapsed) {
+WebZed.Interval = function (callback, delay, elapsed) {
 	if (!(callback instanceof Function)) {
 		throw new TypeError("callback should be a Function");
 	}
@@ -24,16 +24,16 @@ function Interval(callback, delay, elapsed) {
 	
 	this.started = false;
 	this.interval = null;
-}
+};
 
-Interval.prototype = {
+WebZed.Interval.prototype = {
 	/**
 	 * Starts the interval
 	 * @return void
 	 */
 	start : function () {
 		this.started = true;
-		this.interval = setInterval(bind(this, "update"), this.delay);
+		this.interval = setInterval(WebZed.bind(this, "update"), this.delay);
 		return null;
 	},
 	/**

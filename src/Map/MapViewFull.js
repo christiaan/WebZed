@@ -1,4 +1,4 @@
-function MapViewFull(map, display) {
+WebZed.MapViewFull = function (map, display) {
 	
 	if (map.width * map.tileWidth !== display.width) {
 		throw new Error("display width should correspond with map width");
@@ -9,9 +9,9 @@ function MapViewFull(map, display) {
 	
 	this.map = map;
 	this.display = display;
-}
+};
 
-MapViewFull.prototype = {
+WebZed.MapViewFull.prototype = {
 	/**
 	 * Paint tiles on the canvas 
 	 */

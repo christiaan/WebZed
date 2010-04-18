@@ -7,9 +7,9 @@
  * @param {Function} once If this is set the animation is just run once 
  * @implements SpriteBehaviorInterface
  */
-function SpriteBehaviorAnimate(direction, speed, once) {
-	if(direction !== SpriteBehaviorAnimate.vertical &&
-	direction !== SpriteBehaviorAnimate.horizontal) {
+WebZed.SpriteBehaviorAnimate = function (direction, speed, once) {
+	if(direction !== WebZed.SpriteBehaviorAnimate.vertical &&
+	direction !== WebZed.SpriteBehaviorAnimate.horizontal) {
 		throw new TypeError("Direction should either be vertical or horizontal");
 	}
 	if(speed.constructor !== Number) {
@@ -23,12 +23,12 @@ function SpriteBehaviorAnimate(direction, speed, once) {
 	this.speed = speed;
 	this.once = once || false;
 	this.start_time = false;
-}
+};
 
-SpriteBehaviorAnimate.vertical = 1;
-SpriteBehaviorAnimate.horizontal = 2;
+WebZed.SpriteBehaviorAnimate.vertical = 1;
+WebZed.SpriteBehaviorAnimate.horizontal = 2;
 
-SpriteBehaviorAnimate.prototype = {
+WebZed.SpriteBehaviorAnimate.prototype = {
 	/**
 	 * Method that will run before a sprite paints itself on a display
 	 * 
@@ -45,7 +45,7 @@ SpriteBehaviorAnimate.prototype = {
 		
 		if(false !== this.once) {
 			var frames;
-			if(this.direction === SpriteBehaviorAnimate.horizontal) {
+			if(this.direction === WebZed.SpriteBehaviorAnimate.horizontal) {
 				frames = sprite.image.horizontalFrames;
 			}
 			else {
@@ -60,7 +60,7 @@ SpriteBehaviorAnimate.prototype = {
 			}
 		}
 	
-		if(this.direction === SpriteBehaviorAnimate.horizontal) {
+		if(this.direction === WebZed.SpriteBehaviorAnimate.horizontal) {
 			sprite.source_left = sprite.image.width * 
 				(Math.floor(time / this.speed) % sprite.image.horizontalFrames); 
 		}

@@ -1,9 +1,20 @@
+WebZed.bind = function (obj, func) {
+	if(func.constructor === String) {
+		func = obj[func];
+	}
+	if(!(func instanceof Function)) {
+		throw new TypeError("func should be a Function");
+	}
+	return function() {
+		return func.apply(obj, arguments);
+	};
+};
 /**
  * Originally from the js design patterns book
  * @link http://jsdesignpatterns.com/
  * @constructor
  */
-function Interface(name, methods) {
+WebZed.Interface = function (name, methods) {
     if (arguments.length !== 2) {
         throw new Error("Interface constructor called with "+arguments.length+
 			" arguments, but expected exactly 2.");
@@ -18,9 +29,9 @@ function Interface(name, methods) {
         }
     }
 	this.methods = methods;
-}
+};
 
-Interface.ensureImplements = function(object) {
+WebZed.Interface.ensureImplements = function(object) {
 	var i, interf, j, method;
     if (arguments.length < 2) {
         throw new Error("Function Interface.ensureImplements called with " +
@@ -29,7 +40,7 @@ Interface.ensureImplements = function(object) {
 
     for (i = 1; i < arguments.length; i += 1) {
         interf = arguments[i];
-        if (interf.constructor !== Interface) {
+        if (interf.constructor !== WebZed.Interface) {
             throw new Error("Function Interface.ensureImplements expects "+
 				"arguments two and above to be instances of Interface.");
         }

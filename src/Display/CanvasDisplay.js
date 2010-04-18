@@ -7,14 +7,14 @@
  * @param {String} bgcolor
  * @param {Canvas} canvas
  */
-function CanvasDisplay(width, height, bgcolor, canvas) {
+WebZed.CanvasDisplay = function (width, height, bgcolor, canvas) {
 	this.width = width;
 	this.height = height;
-	this.canvas = canvas || new Canvas(width, height);
+	this.canvas = canvas || new WebZed.Canvas(width, height);
 	this.bgcolor = bgcolor;
-}
+};
 
-CanvasDisplay.prototype = {
+WebZed.CanvasDisplay.prototype = {
 	/**
 	 * Called before a paint run
 	 */

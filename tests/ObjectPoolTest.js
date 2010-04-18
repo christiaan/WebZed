@@ -4,14 +4,14 @@ module("Object Pool", {
 			this.a = a;
 			this.args = arguments;
 		};
-		this.obj = new ObjectPool(this.mockClass);
+		this.obj = new WebZed.ObjectPool(this.mockClass);
 	}
 });
 
 test("throws an error on invalid target class", function() {
 	var thrown = false;
 	try {
-		new ObjectPool("");
+		new WebZed.ObjectPool("");
 	} catch (e) {
 		thrown = true;
 	}

@@ -4,7 +4,7 @@
  * @constructor
  * @param {Array} items
  */
-function ObjectCollection(items) {
+WebZed.ObjectCollection = function (items) {
 	if (items) {
 		if (!(items instanceof Array)) {
 			throw new TypeError("items should be an array");
@@ -13,17 +13,17 @@ function ObjectCollection(items) {
 			this.push(item);
 		}, this);
 	}
-}
+};
 
 // extend array
-ObjectCollection.prototype = [];
+WebZed.ObjectCollection.prototype = [];
 
 /**
  * Pushes a item to the end of the collection
  * @param {Object} item
  * @return {Number} New length of the collection
  */
-ObjectCollection.prototype.push = function (item) {
+WebZed.ObjectCollection.prototype.push = function (item) {
 	if (this.contains(item)) {
 		throw new Error("item is already in collection");
 	}
@@ -35,7 +35,7 @@ ObjectCollection.prototype.push = function (item) {
  * @param {Object} item
  * @return {Number} New length of the collection
  */
-ObjectCollection.prototype.unshift = function (item) {
+WebZed.ObjectCollection.prototype.unshift = function (item) {
 	if (this.contains(item)) {
 		throw new Error("item is already in collection");
 	}
@@ -47,7 +47,7 @@ ObjectCollection.prototype.unshift = function (item) {
  * @param {Number} position
  * @param {Object} item
  */
-ObjectCollection.prototype.addAt = function (position, item) {
+WebZed.ObjectCollection.prototype.addAt = function (position, item) {
 	if (position.constructor !== Number) {
 		throw new TypeError("position should be a Number");
 	}
@@ -63,7 +63,7 @@ ObjectCollection.prototype.addAt = function (position, item) {
  * @param {Object} before
  * @param {Object} item
  */
-ObjectCollection.prototype.addBefore = function (before, item) {
+WebZed.ObjectCollection.prototype.addBefore = function (before, item) {
 	before = this.indexOf(before);
 	if (before === -1) {
 		throw new Error("Item to add before not found");
@@ -76,7 +76,7 @@ ObjectCollection.prototype.addBefore = function (before, item) {
  * @param {Object} after
  * @param {Object} item
  */
-ObjectCollection.prototype.addAfter = function (after, item) {
+WebZed.ObjectCollection.prototype.addAfter = function (after, item) {
 	after = this.indexOf(after);
 	if (after === -1) {
 		throw new Error("Item to add after not found");
@@ -88,7 +88,7 @@ ObjectCollection.prototype.addAfter = function (after, item) {
  * Removes a item from the stack
  * @param {Object} item
  */
-ObjectCollection.prototype.remove = function (item) {
+WebZed.ObjectCollection.prototype.remove = function (item) {
 	var i = this.indexOf(item);
 	if (i === -1) {
 		throw new Error("Item not found");
@@ -101,6 +101,6 @@ ObjectCollection.prototype.remove = function (item) {
  * @param {Object} item
  * @return bool
  */
-ObjectCollection.prototype.contains = function (item) {
+WebZed.ObjectCollection.prototype.contains = function (item) {
 	return this.indexOf(item) !== -1;
 };

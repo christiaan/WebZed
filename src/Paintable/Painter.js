@@ -6,23 +6,23 @@
  * @param {Number} frequency Time between paints in milliseconds
  * @constructor
  */
-function Painter(paintable, display, frequency) {
-	Interface.ensureImplements(paintable, PaintableInterface);
-	Interface.ensureImplements(display, DisplayInterface);
+WebZed.Painter = function (paintable, display, frequency) {
+	WebZed.Interface.ensureImplements(paintable, WebZed.PaintableInterface);
+	WebZed.Interface.ensureImplements(display, WebZed.DisplayInterface);
 	if (frequency.constructor !== Number) {
 		throw new TypeError("frequency should be a number");
 	}
 	
 	this.paintable = paintable;
 	this.display = display;
-	this.interval = new Interval(bind(this, "update"), frequency);
-}
+	this.interval = new WebZed.Interval(WebZed.bind(this, "update"), frequency);
+};
 
 /**
  * Starts the painting loop
  * @return void
  */
-Painter.prototype.start = function () {
+WebZed.Painter.prototype.start = function () {
 	this.update(this.interval.elapsed);
 	this.interval.start();
 };
@@ -31,7 +31,7 @@ Painter.prototype.start = function () {
  * Stops the painting loop
  * @return int Returns the time at which the loop stopped
  */
-Painter.prototype.stop = function () {
+WebZed.Painter.prototype.stop = function () {
 	if (!this.interval.started) {
 		throw new Error("Paint loop hasn't started");
 	}
@@ -43,7 +43,7 @@ Painter.prototype.stop = function () {
  * Updates the display with the paintable
  * @param {Number} elapsed time elapsed
  */
-Painter.prototype.update = function (elapsed) {
+WebZed.Painter.prototype.update = function (elapsed) {
 	this.display.paintStart();
 	this.paintable.paint(this.display, elapsed);
 	this.display.paintEnd();

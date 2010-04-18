@@ -1,3 +1,3 @@
-var PaintableInterface = new Interface("PaintableInterface", [
+WebZed.PaintableInterface = new WebZed.Interface("PaintableInterface", [
 	"paint" /* display, time, left, top */
 ]);

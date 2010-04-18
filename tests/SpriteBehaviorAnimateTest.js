@@ -2,7 +2,7 @@ module("Sprite Behavior Animate");
 test("Construct", 4, function(){
 	var thrown = false;
 	try {
-		new SpriteBehaviorAnimate("diagonal");
+		new WebZed.SpriteBehaviorAnimate("diagonal");
 	} catch (e) {
 		thrown = true;
 	}
@@ -10,14 +10,14 @@ test("Construct", 4, function(){
 	
 	thrown = false;
 	try {
-		new SpriteBehaviorAnimate(SpriteBehaviorAnimate.horizontal, "fast");
+		new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, "fast");
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "Speed should be a number");
 	
-	var obj = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.horizontal, 300);
-	equals(obj.direction, SpriteBehaviorAnimate.horizontal, "Direction set");
+	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
+	equals(obj.direction, WebZed.SpriteBehaviorAnimate.horizontal, "Direction set");
 	equals(obj.speed, 300, "Speed set");
 });
 
@@ -36,7 +36,7 @@ test("Update Sprite", 14, function(){
 		}
 	};
 	
-	var obj = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.horizontal, 300);
+	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
 	
 	// First time our behavior sees is 0 so the animation started at 0
 	obj.updateSprite(mockSprite, {}, 0);
@@ -61,7 +61,7 @@ test("Update Sprite", 14, function(){
 	mockSprite.source_left = 0;
 	mockSprite.source_top = 0;
 	
-	obj = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.vertical, 10);
+	obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 10);
 	// First time our behavior sees is 0 so the animation started at 0
 	obj.updateSprite(mockSprite, {}, 0);
 	
@@ -100,7 +100,7 @@ test("Update Sprite Once", 11, function(){
 		once.args = arguments;
 		once.context = this;
 	};
-	var obj = new SpriteBehaviorAnimate(SpriteBehaviorAnimate.vertical, 10, once);
+	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 10, once);
 	obj.updateSprite(mockSprite, mockDisplay, 0);
 	ok(!once.args, "Once isn't called on first call");
 	obj.updateSprite(mockSprite, mockDisplay, 10);

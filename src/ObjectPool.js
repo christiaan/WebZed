@@ -7,14 +7,14 @@
  * @param {Function} objectClass Constructor of the host class
  * @return void
  */
-function ObjectPool(objectClass) {
+WebZed.ObjectPool = function (objectClass) {
 	if (!(objectClass instanceof Function)) {
 		throw new TypeError("objectClass should be of type Function");
 	}
 
 	this.objectClass = objectClass;
 	this.pool = [];
-}
+};
 
 /**
  * Returns a objectClass instance either recycling an old one or creating
@@ -22,7 +22,7 @@ function ObjectPool(objectClass) {
  * @param [argN] any args passed to the object constructor
  * @return {Object} Object of type objectClass
  */
-ObjectPool.prototype.create = function () {
+WebZed.ObjectPool.prototype.create = function () {
 	var obj;
 	if (this.pool.length) {
 		obj = this.pool.pop();
@@ -41,7 +41,7 @@ ObjectPool.prototype.create = function () {
  * @param {Array} args
  * @return {Object} new instance of type objectClass
  */
-ObjectPool.prototype.createNew = function (args) {
+WebZed.ObjectPool.prototype.createNew = function (args) {
 	// there is no way to do a new SomeClass with an array
 	// as arguments so we create a function to do just that
 	for (var argParams = [], i = 0, len = args.length; i < len; i += 1) {
@@ -58,7 +58,7 @@ ObjectPool.prototype.createNew = function (args) {
  * @param {Bool}strip
  * @return void
  */
-ObjectPool.prototype.recycle = function (obj, strip) {
+WebZed.ObjectPool.prototype.recycle = function (obj, strip) {
 	if (!obj.active) {
 		throw new Error("Object is already recycled");
 	}
@@ -77,9 +77,9 @@ ObjectPool.prototype.recycle = function (obj, strip) {
  * Augment the objectClass with a create and recycle method
  * @return void
  */
-ObjectPool.prototype.augment = function () {
+WebZed.ObjectPool.prototype.augment = function () {
 	var pool = this;
-	this.objectClass.create = bind(this, "create");
+	this.objectClass.create = WebZed.bind(this, "create");
 	this.objectClass.prototype.recycle = function (strip) {
 		pool.recycle(this, strip);
 	};

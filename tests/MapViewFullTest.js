@@ -19,7 +19,7 @@ test("throw error if map width does not correspond with canvas", function(){
 	var thrown = false;
 	this.canvas.width = 321;
 	try {
-		new MapViewFull(this.map, this.canvas);
+		new WebZed.MapViewFull(this.map, this.canvas);
 	} catch (e) {
 		thrown = e instanceof Error;
 	}
@@ -30,7 +30,7 @@ test("throw error if map height does not correspond with canvas", function() {
 	var thrown = false;
 	this.canvas.height = 2234;
 	try {
-		new MapViewFull(this.map, this.canvas);
+		new WebZed.MapViewFull(this.map, this.canvas);
 	} catch (e) {
 		thrown = e instanceof Error;
 	}
@@ -69,7 +69,7 @@ module("Map Canvas with a valid map and canvas", { setup: function() {
 		},
 		paintImage: function(){}
 	};
-	this.obj = new MapViewFull(this.mockMap, this.mockDisplay);
+	this.obj = new WebZed.MapViewFull(this.mockMap, this.mockDisplay);
 	this.obj.paintMap();
 }});
 

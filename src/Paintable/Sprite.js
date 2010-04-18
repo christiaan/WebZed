@@ -9,8 +9,8 @@
  * @param {Function} onpaint
  * @param {PaintableCollection} children
  */
-function Sprite(image, left, top, behaviors, onpaint, children) {
-	if(!image || !(image instanceof ImageSource)) {
+WebZed.Sprite = function (image, left, top, behaviors, onpaint, children) {
+	if(!image || !(image instanceof WebZed.ImageSource)) {
 		throw new TypeError("image should be a ImageSource object");
 	}
 	if(left.constructor !== Number) {
@@ -20,14 +20,14 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 		throw new TypeError("top should be a Number");
 	}
 	
-	if(behaviors && !(behaviors instanceof ObjectCollection)) {
+	if(behaviors && !(behaviors instanceof WebZed.ObjectCollection)) {
 		throw new TypeError("behaviors should be a ObjectCollection");
 	}
 	
 	if(onpaint && !(onpaint instanceof Function)) {
 		throw new TypeError("onpaint should be a Function");
 	}
-	if(children && !(children instanceof PaintableCollection)) {
+	if(children && !(children instanceof WebZed.PaintableCollection)) {
 		throw new TypeError("children should be a PaintableCollection");
 	}
 	
@@ -35,14 +35,14 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 	this.left = left;
 	this.top = top;
 	this.onpaint = onpaint;
-	this.children = children || new PaintableCollection();
-	this.behaviors = behaviors || new ObjectCollection();
+	this.children = children || new WebZed.PaintableCollection();
+	this.behaviors = behaviors || new WebZed.ObjectCollection();
 	
 	this.source_left = 0;
 	this.source_top = 0;
-}
+};
 
-Sprite.prototype = {
+WebZed.Sprite.prototype = {
 	/**
 	 * Paint the ImageSource on a display
 	 * @param display

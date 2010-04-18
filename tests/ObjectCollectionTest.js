@@ -5,7 +5,7 @@ module("ObjectCollection");
 test("Constructor", function() {
 	var thrown = false;
 	try {
-		new ObjectCollection({"paint" : function(){}});
+		new WebZed.ObjectCollection({"paint" : function(){}});
 	} catch (e) {
 		thrown = true;
 	}
@@ -13,7 +13,7 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		new ObjectCollection([]);
+		new WebZed.ObjectCollection([]);
 	} catch (e) {
 		thrown = true;
 	}
@@ -21,7 +21,7 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		var obj = new ObjectCollection();
+		var obj = new WebZed.ObjectCollection();
 	} catch (e) {
 		thrown = true;
 	}
@@ -30,7 +30,7 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		new ObjectCollection(obj);
+		new WebZed.ObjectCollection(obj);
 	} catch (e) {
 		thrown = true;
 	}
@@ -39,7 +39,7 @@ test("Constructor", function() {
 
 
 test("Push", 10, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	
 	var thrown = false;
 	try {
@@ -50,13 +50,13 @@ test("Push", 10, function(){
 	equals(obj.length, 1, "objects are accepted");
 	same(obj[0], mockObj, "mock is the first entry");
 	
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	obj.push(mockCollection);
 	equals(obj.length, 2, "Another Collection is accepted as well");
 	same(obj[1], mockCollection, "Collection is added at the end");
 	same(obj[0], mockObj, "mock is still the first entry");
 	
-	var newobj = new ObjectCollection(obj);
+	var newobj = new WebZed.ObjectCollection(obj);
 	equals(obj.length, 2, "On construct the paintables get pushed");
 	same(newobj, obj, "Constructing a new Collection with another collection result in the same contents");
 	same(obj[0], mockObj, "mock is still the first entry");
@@ -72,13 +72,13 @@ test("Push", 10, function(){
 });
 
 test("Unshift", 6, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	
 	obj.unshift(mockObj);
 	equals(obj.length, 1, "Mock is the only item");
 	same(obj[0], mockObj, "Mock is first item");
 	
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	obj.unshift(mockCollection);
 	equals(obj.length, 2, "We got 2 items now");
 	same(obj[1], mockObj, "Mock is 2nd item now");
@@ -94,7 +94,7 @@ test("Unshift", 6, function(){
 });
 
 test("AddAt", 8, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	
 	var thrown = false;
 	try {
@@ -120,7 +120,7 @@ test("AddAt", 8, function(){
 	same(obj[0], anotherMock, "Another mock added at position 0");
 	same(obj[1], mockObj, "Mock moved 1 position");
 	
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	obj.addAt(1, mockCollection);
 	same(obj[0], anotherMock, "Another mock is still at position 0");
 	same(obj[2], mockObj, "Mock moved to position 2");
@@ -128,9 +128,9 @@ test("AddAt", 8, function(){
 });
 
 test("AddBefore", 5, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	
 	obj.push(mockObj);
 	obj.push(anotherMock);
@@ -151,9 +151,9 @@ test("AddBefore", 5, function(){
 });
 
 test("AddAfter", 5, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	
 	obj.push(mockObj);
 	obj.push(anotherMock);
@@ -174,9 +174,9 @@ test("AddAfter", 5, function(){
 });
 
 test("Contains", 3, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	
 	obj.push(mockObj);
 	obj.push(mockCollection);
@@ -187,9 +187,9 @@ test("Contains", 3, function(){
 });
 
 test("Remove", 3, function(){
-	var obj = new ObjectCollection();
+	var obj = new WebZed.ObjectCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new ObjectCollection();
+	var mockCollection = new WebZed.ObjectCollection();
 	
 	obj.push(mockObj);
 	obj.push(mockCollection);

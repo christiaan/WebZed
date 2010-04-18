@@ -5,7 +5,7 @@ module("PaintableCollection");
 test("Constructor", 5, function(){
 	var thrown = false;
 	try {
-		new PaintableCollection({"paint" : function(){}});
+		new WebZed.PaintableCollection({"paint" : function(){}});
 	} catch (e) {
 		thrown = true;
 	}
@@ -13,7 +13,7 @@ test("Constructor", 5, function(){
 	
 	thrown = false;
 	try {
-		new PaintableCollection([]);
+		new WebZed.PaintableCollection([]);
 	} catch (e) {
 		thrown = true;
 	}
@@ -21,7 +21,7 @@ test("Constructor", 5, function(){
 	
 	thrown = false;
 	try {
-		var obj = new PaintableCollection();
+		var obj = new WebZed.PaintableCollection();
 	} catch (e) {
 		thrown = true;
 	}
@@ -30,7 +30,7 @@ test("Constructor", 5, function(){
 	
 	thrown = false;
 	try {
-		new PaintableCollection(obj);
+		new WebZed.PaintableCollection(obj);
 	} catch (e) {
 		thrown = true;
 	}
@@ -38,7 +38,7 @@ test("Constructor", 5, function(){
 });
 
 test("Push", 11, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	
 	var thrown = false;
 	try {
@@ -57,13 +57,13 @@ test("Push", 11, function(){
 	equals(obj.length, 1, "paintables are accepted");
 	same(obj[0], mockPaintable, "mock is the first entry");
 	
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	obj.push(mockCollection);
 	equals(obj.length, 2, "Another Collection is accepted as well");
 	same(obj[1], mockCollection, "Collection is added at the end");
 	same(obj[0], mockPaintable, "mock is still the first entry");
 	
-	var newobj = new PaintableCollection(obj);
+	var newobj = new WebZed.PaintableCollection(obj);
 	equals(obj.length, 2, "On construct the paintables get pushed");
 	same(newobj, obj, "Constructing a new Collection with another collection result in the same contents");
 	same(obj[0], mockPaintable, "mock is still the first entry");
@@ -79,7 +79,7 @@ test("Push", 11, function(){
 });
 
 test("Unshift", 7, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	
 	var thrown = false;
 	try {
@@ -93,7 +93,7 @@ test("Unshift", 7, function(){
 	equals(obj.length, 1, "Paintable is the only item");
 	same(obj[0], mockPaintable, "Paintable is first item");
 	
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	obj.unshift(mockCollection);
 	equals(obj.length, 2, "We got 2 items now");
 	same(obj[1], mockPaintable, "Paintable is 2nd item now");
@@ -109,7 +109,7 @@ test("Unshift", 7, function(){
 });
 
 test("AddAt", 9, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	
 	var thrown = false;
 	try {
@@ -143,7 +143,7 @@ test("AddAt", 9, function(){
 	same(obj[0], anotherMock, "Another mock added at position 0");
 	same(obj[1], mockPaintable, "Mock moved 1 position");
 	
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	obj.addAt(1, mockCollection);
 	same(obj[0], anotherMock, "Another mock is still at position 0");
 	same(obj[2], mockPaintable, "Mock moved to position 2");
@@ -151,9 +151,9 @@ test("AddAt", 9, function(){
 });
 
 test("AddBefore", 5, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	
 	obj.push(mockPaintable);
 	obj.push(anotherMock);
@@ -174,9 +174,9 @@ test("AddBefore", 5, function(){
 });
 
 test("AddAfter", 5, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	
 	obj.push(mockPaintable);
 	obj.push(anotherMock);
@@ -197,9 +197,9 @@ test("AddAfter", 5, function(){
 });
 
 test("Contains", 3, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	
 	obj.push(mockPaintable);
 	obj.push(mockCollection);
@@ -210,9 +210,9 @@ test("Contains", 3, function(){
 });
 
 test("Remove", 3, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new PaintableCollection();
+	var mockCollection = new WebZed.PaintableCollection();
 	
 	obj.push(mockPaintable);
 	obj.push(mockCollection);
@@ -231,7 +231,7 @@ test("Remove", 3, function(){
 });
 
 test("Paint", 4, function(){
-	var obj = new PaintableCollection();
+	var obj = new WebZed.PaintableCollection();
 	var anotherMock = {"paint" : function(){this.args = arguments;}};
 	var displayMock = {};
 		
