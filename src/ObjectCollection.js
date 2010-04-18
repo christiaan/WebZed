@@ -5,24 +5,26 @@
  * @param {Array} items
  */
 function ObjectCollection(items) {
-	if(items) {
-		if(!(items instanceof Array)) {
+	if (items) {
+		if (!(items instanceof Array)) {
 			throw new TypeError("items should be an array");
 		}
-		items.forEach(function(item) {	this.push(item); }, this);
+		items.forEach(function (item) {
+			this.push(item);
+		}, this);
 	}
-};
+}
 
 // extend array
-ObjectCollection.prototype = new Array();
+ObjectCollection.prototype = [];
 
 /**
  * Pushes a item to the end of the collection
  * @param {Object} item
  * @return {Number} New length of the collection
  */
-ObjectCollection.prototype.push = function(item) {
-	if(this.contains(item)) {
+ObjectCollection.prototype.push = function (item) {
+	if (this.contains(item)) {
 		throw new Error("item is already in collection");
 	}
 	return Array.prototype.push.call(this, item);
@@ -33,8 +35,8 @@ ObjectCollection.prototype.push = function(item) {
  * @param {Object} item
  * @return {Number} New length of the collection
  */
-ObjectCollection.prototype.unshift = function(item) {
-	if(this.contains(item)) {
+ObjectCollection.prototype.unshift = function (item) {
+	if (this.contains(item)) {
 		throw new Error("item is already in collection");
 	}
 	return Array.prototype.unshift.call(this, item);
@@ -45,11 +47,11 @@ ObjectCollection.prototype.unshift = function(item) {
  * @param {Number} position
  * @param {Object} item
  */
-ObjectCollection.prototype.addAt = function(position, item) {
-	if(position.constructor !== Number) {
+ObjectCollection.prototype.addAt = function (position, item) {
+	if (position.constructor !== Number) {
 		throw new TypeError("position should be a Number");
 	}
-	if(this.contains(item)) {
+	if (this.contains(item)) {
 		throw new Error("Item is already in collection");
 	}
 	
@@ -61,9 +63,9 @@ ObjectCollection.prototype.addAt = function(position, item) {
  * @param {Object} before
  * @param {Object} item
  */
-ObjectCollection.prototype.addBefore = function(before, item) {
+ObjectCollection.prototype.addBefore = function (before, item) {
 	before = this.indexOf(before);
-	if(before === -1) {
+	if (before === -1) {
 		throw new Error("Item to add before not found");
 	}
 	this.addAt(before, item);
@@ -74,21 +76,21 @@ ObjectCollection.prototype.addBefore = function(before, item) {
  * @param {Object} after
  * @param {Object} item
  */
-ObjectCollection.prototype.addAfter = function(after, item) {
+ObjectCollection.prototype.addAfter = function (after, item) {
 	after = this.indexOf(after);
-	if(after === -1) {
+	if (after === -1) {
 		throw new Error("Item to add after not found");
 	}
-	this.addAt(after+1, item);
+	this.addAt(after + 1, item);
 };
 
 /**
  * Removes a item from the stack
  * @param {Object} item
  */
-ObjectCollection.prototype.remove = function(item) {
+ObjectCollection.prototype.remove = function (item) {
 	var i = this.indexOf(item);
-	if(i === -1) {
+	if (i === -1) {
 		throw new Error("Item not found");
 	}
 	this.splice(i, 1);
@@ -99,6 +101,6 @@ ObjectCollection.prototype.remove = function(item) {
  * @param {Object} item
  * @return bool
  */
-ObjectCollection.prototype.contains = function(item) {
+ObjectCollection.prototype.contains = function (item) {
 	return this.indexOf(item) !== -1;
 };

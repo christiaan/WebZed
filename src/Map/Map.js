@@ -1,19 +1,18 @@
 function Map(width, height, tileWidth, tileHeight, tiles, tilesets) {
-	
-	if(width * height !== tiles.length) {
-		throw new Error("Not enough tiles to fill the map with");
-	}
-	
 	var i, count = 0;
 	
-	for(i = 0; i < tilesets.length; i++) {
+	if (width * height !== tiles.length) {
+		throw new Error("Not enough tiles to fill the map with");
+	}
+		
+	for (i = 0; i < tilesets.length; i += 1) {
 		count += ((tilesets[i].width / tileWidth) *
 			(tilesets[i].height / tileHeight));
 	}
 	
-	for(i = 0; i < tiles.length; i++) {
-		if(tiles[i] > count) {
-			throw new Error("Tileset missing for tile with gid "+tiles[i]);
+	for (i = 0; i < tiles.length; i += 1) {
+		if (tiles[i] > count) {
+			throw new Error("Tileset missing for tile with gid " + tiles[i]);
 		}
 	}
 	
@@ -24,33 +23,33 @@ function Map(width, height, tileWidth, tileHeight, tiles, tilesets) {
 	
 	this.tiles = tiles;
 	this.tilesets = tilesets;
-};
+}
 
 Map.prototype = {
-	paintTile: function(left, top, display, leftOffset, topOffset) {
-		var gid = this.tiles[(top * this.width) + left];
-		if(!gid) {
+	paintTile: function (left, top, display, leftOffset, topOffset) {
+		var gid = this.tiles[(top * this.width) + left],
+		srcNode, srcLeft, srcTop, t, tileset, tilesetWidth, count;
+		if (!gid) {
 			return;
 		}
 		
-		var srcNode, srcLeft, srcTop;
-		for(var t = 0; t < this.tilesets.length; t++) {
-			var tileset = this.tilesets[t],
-			tilesetWidth = (tileset.width / this.tileWidth),
+		for (t = 0; t < this.tilesets.length; t += 1) {
+			tileset = this.tilesets[t];
+			tilesetWidth = (tileset.width / this.tileWidth);
 			count = (tilesetWidth * (tileset.height / this.tileHeight));
-			if(gid > count) {
+			if (gid > count) {
 				gid -= count;
 				srcNode = false;
 			}
 			else {
 				srcNode = tileset;
 				srcLeft = (gid % tilesetWidth) * this.tileWidth;
-				srcTop = Math.floor(g / tilesetWidth) * this.tileHeight;
+				srcTop = Math.floor(gid / tilesetWidth) * this.tileHeight;
 			}
 		}
 		
-		if(!srcNode) {
-			throw new Error("no tileset found for gid "+gid);
+		if (!srcNode) {
+			throw new Error("no tileset found for gid " + gid);
 		}
 		display.paintImage(srcNode, leftOffset, topOffset,
 			this.tileWidth, this.tileHeight, srcLeft, srcTop);

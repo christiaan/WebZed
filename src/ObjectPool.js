@@ -8,13 +8,13 @@
  * @return void
  */
 function ObjectPool(objectClass) {
-	if(!(objectClass instanceof Function)) {
+	if (!(objectClass instanceof Function)) {
 		throw new TypeError("objectClass should be of type Function");
 	}
 
 	this.objectClass = objectClass;
 	this.pool = [];
-};
+}
 
 /**
  * Returns a objectClass instance either recycling an old one or creating
@@ -22,9 +22,9 @@ function ObjectPool(objectClass) {
  * @param [argN] any args passed to the object constructor
  * @return {Object} Object of type objectClass
  */
-ObjectPool.prototype.create = function() {
+ObjectPool.prototype.create = function () {
 	var obj;
-	if(this.pool.length) {
+	if (this.pool.length) {
 		obj = this.pool.pop();
 		this.objectClass.apply(obj, arguments);
 	}
@@ -41,15 +41,15 @@ ObjectPool.prototype.create = function() {
  * @param {Array} args
  * @return {Object} new instance of type objectClass
  */
-ObjectPool.prototype.createNew = function(args) {
+ObjectPool.prototype.createNew = function (args) {
 	// there is no way to do a new SomeClass with an array
 	// as arguments so we create a function to do just that
-	for(var argParams = [], i = 0, len = args.length; i < len; i++) {
-		argParams.push("a["+i+"]");
+	for (var argParams = [], i = 0, len = args.length; i < len; i += 1) {
+		argParams.push("a[" + i + "]");
 	}
 	
 	return (new Function("c", "a",
-		"return new c("+argParams.join(",")+");"))(this.objectClass, args);
+		"return new c(" + argParams.join(",") + ");")(this.objectClass, args));
 };
 
 /**
@@ -58,13 +58,13 @@ ObjectPool.prototype.createNew = function(args) {
  * @param {Bool}strip
  * @return void
  */
-ObjectPool.prototype.recycle = function(obj, strip) {
-	if(!obj.active) {
+ObjectPool.prototype.recycle = function (obj, strip) {
+	if (!obj.active) {
 		throw new Error("Object is already recycled");
 	}
-	if(strip) {
-		for(var prop in obj) {
-			if(obj.hasOwnProperty(prop)) {
+	if (strip) {
+		for (var prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
 				delete obj[prop];
 			}
 		}
@@ -77,10 +77,10 @@ ObjectPool.prototype.recycle = function(obj, strip) {
  * Augment the objectClass with a create and recycle method
  * @return void
  */
-ObjectPool.prototype.augment = function() {
+ObjectPool.prototype.augment = function () {
 	var pool = this;
 	this.objectClass.create = bind(this, "create");
-	this.objectClass.prototype.recycle = function(strip){
+	this.objectClass.prototype.recycle = function (strip) {
 		pool.recycle(this, strip);
 	};
 };

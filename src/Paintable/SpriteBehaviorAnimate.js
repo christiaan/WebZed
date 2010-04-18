@@ -23,7 +23,7 @@ function SpriteBehaviorAnimate(direction, speed, once) {
 	this.speed = speed;
 	this.once = once || false;
 	this.start_time = false;
-};
+}
 
 SpriteBehaviorAnimate.vertical = 1;
 SpriteBehaviorAnimate.horizontal = 2;

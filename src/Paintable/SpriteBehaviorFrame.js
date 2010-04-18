@@ -13,7 +13,7 @@ function SpriteBehaviorFrame(direction, frame) {
 	}
 	this.direction = direction;
 	this.frame = frame || 0;
-};
+}
 
 SpriteBehaviorFrame.vertical = 1;
 SpriteBehaviorFrame.horizontal = 2;

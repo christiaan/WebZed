@@ -73,7 +73,7 @@ module("Map paintTile() on display", {setup: function() {
 	this.obj = new Map(20, 15, 16, 16, this.tiles, this.tilesets);
 }});
 
-test("paintTile throws an error when an unknown gid is encountered", function() {
+test("throws an error when an unknown gid is encountered", function() {
 	this.tiles[0] = 400;
 	var thrown = false;
 	try {
@@ -82,6 +82,11 @@ test("paintTile throws an error when an unknown gid is encountered", function() 
 		thrown = e instanceof Error;
 	}
 	ok(thrown);
+});
+
+test("skips tiles with a gid that evaluates to false", function() {
+	this.obj.paintTile(0, 0, this.mockDisplay, 0, 0);
+	equals(this.mockDisplay.args.length, 0);
 });
 
 //test("paint draws the tiles on the canvas using drawImage", function() {

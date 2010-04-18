@@ -9,20 +9,20 @@
 function Painter(paintable, display, frequency) {
 	Interface.ensureImplements(paintable, PaintableInterface);
 	Interface.ensureImplements(display, DisplayInterface);
-	if(frequency.constructor !== Number) {
+	if (frequency.constructor !== Number) {
 		throw new TypeError("frequency should be a number");
 	}
 	
 	this.paintable = paintable;
 	this.display = display;
 	this.interval = new Interval(bind(this, "update"), frequency);
-};
+}
 
 /**
  * Starts the painting loop
  * @return void
  */
-Painter.prototype.start = function() {
+Painter.prototype.start = function () {
 	this.update(this.interval.elapsed);
 	this.interval.start();
 };
@@ -31,8 +31,8 @@ Painter.prototype.start = function() {
  * Stops the painting loop
  * @return int Returns the time at which the loop stopped
  */
-Painter.prototype.stop = function() {
-	if(!this.interval.started) {
+Painter.prototype.stop = function () {
+	if (!this.interval.started) {
 		throw new Error("Paint loop hasn't started");
 	}
 	this.interval.stop();
@@ -43,7 +43,7 @@ Painter.prototype.stop = function() {
  * Updates the display with the paintable
  * @param {Number} elapsed time elapsed
  */
-Painter.prototype.update = function(elapsed) {
+Painter.prototype.update = function (elapsed) {
 	this.display.paintStart();
 	this.paintable.paint(this.display, elapsed);
 	this.display.paintEnd();

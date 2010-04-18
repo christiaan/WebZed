@@ -7,13 +7,13 @@
  * @constructor
  */
 function Interval(callback, delay, elapsed) {
-	if(!(callback instanceof Function)) {
+	if (!(callback instanceof Function)) {
 		throw new TypeError("callback should be a Function");
 	}
-	if(delay.constructor !== Number) {
+	if (delay.constructor !== Number) {
 		throw new TypeError("delay should be a Number");
 	}
-	if(elapsed && elapsed.constructor !== Number) {
+	if (elapsed && elapsed.constructor !== Number) {
 		throw new TypeError("elapsed should be a Number");
 	}
 	
@@ -23,28 +23,28 @@ function Interval(callback, delay, elapsed) {
 	this.elapsed = elapsed || 0;
 	
 	this.started = false;
-	this._interval = null;
-};
+	this.interval = null;
+}
 
 Interval.prototype = {
 	/**
 	 * Starts the interval
 	 * @return void
 	 */
-	start : function() {
+	start : function () {
 		this.started = true;
-		this._interval = setInterval(bind(this, "update"), this.delay);
+		this.interval = setInterval(bind(this, "update"), this.delay);
 		return null;
 	},
 	/**
 	 * Stops the interval
 	 * @return void
 	 */
-	stop : function() {
-		if(!this.started) {
-			throw new Exception("Interval not started");
+	stop : function () {
+		if (!this.started) {
+			throw new Error("Interval not started");
 		}
-		clearInterval(this._interval);
+		clearInterval(this.interval);
 		this.started = false;
 		return null;
 	},
@@ -53,7 +53,7 @@ Interval.prototype = {
 	 * @param overdue amount of milliseconds off from the desired delay
 	 * @return void
 	 */
-	update : function(overdue) {
+	update : function (overdue) {
 		this.elapsed += (this.delay + overdue);
 		this.callback(this.elapsed);
 	}

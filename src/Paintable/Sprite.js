@@ -40,7 +40,7 @@ function Sprite(image, left, top, behaviors, onpaint, children) {
 	
 	this.source_left = 0;
 	this.source_top = 0;
-};
+}
 
 Sprite.prototype = {
 	/**
@@ -51,7 +51,7 @@ Sprite.prototype = {
 	 * @param top Offset from the top on the display
 	 */
 	paint : function(display, time, left, top) {
-		for(var i = 0, len = this.behaviors.length; i < len; ++i) {
+		for(var i = 0, len = this.behaviors.length; i < len; i += 1) {
 			this.behaviors[i].updateSprite(this, display, time);
 		}
 		
@@ -94,7 +94,7 @@ Sprite.prototype = {
 		bottom = this.top + this.image.height,
 		right = this.left + this.image.width;
 			
-		for(i = sprites.length - 1; i >= 0; --i) {
+		for(i = sprites.length - 1; i >= 0; i -= 1) {
 			sprite = sprites[i];
 			if(sprite === this) {
 				continue;

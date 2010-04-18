@@ -6,13 +6,13 @@
  */
 function Canvas(width, height) {
 	this.node = document.createElement("canvas");
-	if(!("getContext" in this.node)) {
+	if (!("getContext" in this.node)) {
 		throw new Error("Browser doesnt support Canvas.getContext()");
 	}
 	this.context = this.node.getContext("2d");
 	
 	this.resize(width, height);
-};
+}
 
 Canvas.prototype = {
 	/**
@@ -20,11 +20,11 @@ Canvas.prototype = {
 	 * @param {Number} width
 	 * @param {Number} height
 	 */
-	resize : function(width, height) {
-		if(width.constructor !== Number) {
+	resize : function (width, height) {
+		if (width.constructor !== Number) {
 			throw new TypeError("Width should be a Number");
 		}
-		if(height.constructor !== Number) {
+		if (height.constructor !== Number) {
 			throw new TypeError("Height should be a Number");
 		}
 		this.width = width;
@@ -36,8 +36,8 @@ Canvas.prototype = {
 	 * Fills the canvas with the given color
 	 * @param {String} color hex color or undefined for transparent
 	 */
-	fill : function(color) {
-		if(!color) {
+	fill : function (color) {
+		if (!color) {
 			// According to W3C spec the canvas should be wiped clean
 			// when the dimensions are being assigned
 			this.node.width = this.node.width;
@@ -63,43 +63,45 @@ Canvas.prototype = {
 	 * @param {Number} sourceTop
 	 * @return bool tells if the image was drawn on the canvas
 	 */
-	drawImage : function(node, left, top, width, height, sourceLeft, sourceTop) {
+	drawImage : function (node, left, top, width, height, sourceLeft, sourceTop) {
+		var px;
+		
 		
 		// Do we try to draw at a position outside of the layer
-		if(left < 0) {
-			if(left + width < 0) {
+		if (left < 0) {
+			if (left + width < 0) {
 				return false;
 			}
-			var px = 0 - left; // Amount we're overdue
+			px = 0 - left; // Amount we're overdue
 			width -= px;// Cut it off the width
 			sourceLeft += px;
 			left = 0;
 		}
 		// If the image get drawn completely outside skip it
-		else if(left > this.width) {
+		else if (left > this.width) {
 			return false;
 		}
-		else if(left + width > this.width) {
+		else if (left + width > this.width) {
 			width = this.width - left; // Width is the remaining width
 		}
 		
-		if(top < 0) {
-			if(top + height < 0) {
+		if (top < 0) {
+			if (top + height < 0) {
 				return false;
 			}
-			var px = (0 - top); // Amount we're overdue
+			px = (0 - top); // Amount we're overdue
 			height -= px;// Cut it off the height
 			sourceTop += px;
 			top = 0;
 		}
-		else if(top > this.height) {
+		else if (top > this.height) {
 			return false;
 		}
-		else if(top + height > this.height) {
+		else if (top + height > this.height) {
 			height = this.height - top;// Height is the remaining width
 		}
 		
-		if(!width || !height) {
+		if (!width || !height) {
 			return false;
 		}
 		
