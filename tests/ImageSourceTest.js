@@ -1,14 +1,17 @@
-module("ImageSource");
+module("ImageSource", {
+	setup : function() {
+		this.mockNode = {
+			nodeName : "IMG",
+			complete : true,
+			width : 600,
+			height : 300
+		}; 
+	}
+});
 test("Constructor", 15, function(){
-	var mockNode = {
-		nodeName : "IMG",
-		complete : true,
-		width : 600,
-		height : 300
-	};
-	var thrown = false;
+ 	var thrown = false, obj;
 	try {
-		new WebZed.ImageSource();
+		obj = new WebZed.ImageSource();
 	} catch (e) {
 		thrown = true;
 	}
@@ -16,7 +19,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource({nodeName : "A"});
+		obj = new WebZed.ImageSource({nodeName : "A"});
 	} catch (e) {
 		thrown = true;
 	}
@@ -24,7 +27,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource({nodeName : "A"}, 100);
+		obj = new WebZed.ImageSource({nodeName : "A"}, 100);
 	} catch (e) {
 		thrown = true;
 	}
@@ -32,7 +35,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource({nodeName : "A"}, 100, 200);
+		obj = new WebZed.ImageSource({nodeName : "A"}, 100, 200);
 	} catch (e) {
 		thrown = true;
 	}
@@ -40,7 +43,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource({nodeName : "IMG"}, 200, 100);
+		obj = new WebZed.ImageSource({nodeName : "IMG"}, 200, 100);
 	} catch (e) {
 		thrown = true;
 	}
@@ -48,7 +51,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource({nodeName : "IMG", complete : true}, 100, 200);
+		obj = new WebZed.ImageSource({nodeName : "IMG", complete : true}, 100, 200);
 	} catch (e) {
 		thrown = true;
 	}
@@ -56,7 +59,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource(mockNode, "100", "200");
+		obj = new WebZed.ImageSource(this.mockNode, "100", "200");
 	} catch (e) {
 		thrown = true;
 	}
@@ -64,7 +67,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource(mockNode, 100, "200");
+		obj = new WebZed.ImageSource(this.mockNode, 100, "200");
 	} catch (e) {
 		thrown = true;
 	}
@@ -72,7 +75,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource(mockNode, 450, 200);
+		obj = new WebZed.ImageSource(this.mockNode, 450, 200);
 	} catch (e) {
 		thrown = true;
 	}
@@ -80,7 +83,7 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.ImageSource(mockNode, 100, 200);
+		obj = new WebZed.ImageSource(this.mockNode, 100, 200);
 	} catch (e) {
 		thrown = true;
 	}
@@ -88,20 +91,20 @@ test("Constructor", 15, function(){
 	
 	thrown = false;
 	try {
-		var obj = new WebZed.ImageSource(mockNode, 200, 100);
+		obj = new WebZed.ImageSource(this.mockNode, 200, 100);
 	} catch (e) {
 		alert(e);
 		thrown = true;
 	}
 	ok(!thrown, "Succesfully create a ImageSource");
-	same(obj.node, mockNode, "Node is the same mockNode");
+	same(obj.node, this.mockNode, "Node is the same mockNode");
 	equals(obj.width, 200, "Width is sucessfully set");
 	equals(obj.height, 100, "Height is set");
 
-	mockNode.nodeName = "CANVAS";
+	this.mockNode.nodeName = "CANVAS";
 	thrown = false;
 	try {
-		obj = new WebZed.ImageSource(mockNode, 200, 100);
+		obj = new WebZed.ImageSource(this.mockNode, 200, 100);
 	} catch (e) {
 		alert(e);
 		thrown = true;

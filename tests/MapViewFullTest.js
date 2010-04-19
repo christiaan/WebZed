@@ -16,10 +16,10 @@ module("Map View Full Construction", {
 });
 
 test("throw error if map width does not correspond with canvas", function(){
-	var thrown = false;
+	var thrown = false, obj;
 	this.canvas.width = 321;
 	try {
-		new WebZed.MapViewFull(this.map, this.canvas);
+		obj = new WebZed.MapViewFull(this.map, this.canvas);
 	} catch (e) {
 		thrown = e instanceof Error;
 	}
@@ -27,10 +27,10 @@ test("throw error if map width does not correspond with canvas", function(){
 });
 
 test("throw error if map height does not correspond with canvas", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	this.canvas.height = 2234;
 	try {
-		new WebZed.MapViewFull(this.map, this.canvas);
+		obj = new WebZed.MapViewFull(this.map, this.canvas);
 	} catch (e) {
 		thrown = e instanceof Error;
 	}

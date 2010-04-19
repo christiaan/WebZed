@@ -11,33 +11,33 @@ module("Interval", {
 });
 
 test("throws an exception when given an invalid callback", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.Interval("callback");
+		obj = new WebZed.Interval("callback");
 	} catch (e) {
 		thrown = true;
 	}
-	ok(thrown);	
+	ok(thrown && !obj);	
 });
 
 test("throws an exception when an invalid delay is given", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.Interval(this.callback, "zeshonderd");
+		obj = new WebZed.Interval(this.callback, "zeshonderd");
 	} catch (e) {
 		thrown = true;
 	}
-	ok(thrown);
+	ok(thrown && !obj);
 });
 
 test("type error thrown if elapsed is set but no Number", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.Interval(this.callback, 100, "tweehonderd");
+		obj = new WebZed.Interval(this.callback, 100, "tweehonderd");
 	} catch (e) {
 		thrown = true;
 	}
-	ok(thrown);
+	ok(thrown && !obj);
 });
 
 test("Interval is not started when just created", function() {

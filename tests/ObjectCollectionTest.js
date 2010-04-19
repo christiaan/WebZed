@@ -1,11 +1,16 @@
-(function() {
-var mockObj = {};
-
-module("ObjectCollection");
+module("ObjectCollection", {
+	setup : function() {
+		this.mockObj = {};
+		this.anotherMock = {"paint" : function(){}};
+		this.mockCollection = new WebZed.ObjectCollection();
+		
+		this.obj = new WebZed.ObjectCollection();
+	}
+});
 test("Constructor", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.ObjectCollection({"paint" : function(){}});
+		obj = new WebZed.ObjectCollection({"paint" : function(){}});
 	} catch (e) {
 		thrown = true;
 	}
@@ -13,7 +18,7 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		new WebZed.ObjectCollection([]);
+		obj = new WebZed.ObjectCollection([]);
 	} catch (e) {
 		thrown = true;
 	}
@@ -21,7 +26,7 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		var obj = new WebZed.ObjectCollection();
+		obj = new WebZed.ObjectCollection();
 	} catch (e) {
 		thrown = true;
 	}
@@ -30,41 +35,38 @@ test("Constructor", function() {
 	
 	thrown = false;
 	try {
-		new WebZed.ObjectCollection(obj);
+		obj = new WebZed.ObjectCollection(obj);
 	} catch (e) {
 		thrown = true;
 	}
-	ok(!thrown, "works with another ObjectCollection");
+	ok(!thrown && obj, "works with another ObjectCollection");
 });
 
 
 test("Push", 10, function(){
-	var obj = new WebZed.ObjectCollection();
-	
-	var thrown = false;
+	var thrown = false, newObj;
 	try {
-		obj.push(mockObj);
+		this.obj.push(this.mockObj);
 	} catch (e)	{
 		thrown = true;
 	}
-	equals(obj.length, 1, "objects are accepted");
-	same(obj[0], mockObj, "mock is the first entry");
+	equals(this.obj.length, 1, "objects are accepted");
+	same(this.obj[0], this.mockObj, "mock is the first entry");
 	
-	var mockCollection = new WebZed.ObjectCollection();
-	obj.push(mockCollection);
-	equals(obj.length, 2, "Another Collection is accepted as well");
-	same(obj[1], mockCollection, "Collection is added at the end");
-	same(obj[0], mockObj, "mock is still the first entry");
+	this.obj.push(this.mockCollection);
+	equals(this.obj.length, 2, "Another Collection is accepted as well");
+	same(this.obj[1], this.mockCollection, "Collection is added at the end");
+	same(this.obj[0], this.mockObj, "mock is still the first entry");
 	
-	var newobj = new WebZed.ObjectCollection(obj);
-	equals(obj.length, 2, "On construct the paintables get pushed");
-	same(newobj, obj, "Constructing a new Collection with another collection result in the same contents");
-	same(obj[0], mockObj, "mock is still the first entry");
-	same(obj[1], mockCollection, "Collection is at the end");
+	newObj = new WebZed.ObjectCollection(this.obj);
+	equals(this.obj.length, 2, "On construct the paintables get pushed");
+	same(newObj, this.obj, "Constructing a new Collection with another collection result in the same contents");
+	same(this.obj[0], this.mockObj, "mock is still the first entry");
+	same(this.obj[1], this.mockCollection, "Collection is at the end");
 	
 	thrown = false;
 	try {
-		newobj.push(mockObj);
+		newObj.push(this.mockObj);
 	} catch(e) {
 		thrown = true;
 	}
@@ -72,21 +74,18 @@ test("Push", 10, function(){
 });
 
 test("Unshift", 6, function(){
-	var obj = new WebZed.ObjectCollection();
+	this.obj.unshift(this.mockObj);
+	equals(this.obj.length, 1, "Mock is the only item");
+	same(this.obj[0], this.mockObj, "Mock is first item");
 	
-	obj.unshift(mockObj);
-	equals(obj.length, 1, "Mock is the only item");
-	same(obj[0], mockObj, "Mock is first item");
-	
-	var mockCollection = new WebZed.ObjectCollection();
-	obj.unshift(mockCollection);
-	equals(obj.length, 2, "We got 2 items now");
-	same(obj[1], mockObj, "Mock is 2nd item now");
-	same(obj[0], mockCollection, "Collection is the first item");
+	this.obj.unshift(this.mockCollection);
+	equals(this.obj.length, 2, "We got 2 items now");
+	same(this.obj[1], this.mockObj, "Mock is 2nd item now");
+	same(this.obj[0], this.mockCollection, "Collection is the first item");
 	
 	var thrown = false;
 	try {
-		obj.unshift(mockObj);
+		this.obj.unshift(this.mockObj);
 	} catch (e) {
 		thrown = true;
 	}
@@ -94,11 +93,9 @@ test("Unshift", 6, function(){
 });
 
 test("AddAt", 8, function(){
-	var obj = new WebZed.ObjectCollection();
-	
 	var thrown = false;
 	try {
-		obj.addAt();
+		this.obj.addAt();
 	} catch (e) {
 		thrown = true;
 	}
@@ -106,105 +103,85 @@ test("AddAt", 8, function(){
 
 	thrown = false;
 	try {
-		obj.addAt(mockObj);
+		this.obj.addAt(this.mockObj);
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "position should be a Number");
 	
-	obj.addAt(0, mockObj);
-	same(obj[0], mockObj, "Added at position 0");
+	this.obj.addAt(0, this.mockObj);
+	same(this.obj[0], this.mockObj, "Added at position 0");
 	
-	var anotherMock = {"paint" : function(){}};
-	obj.addAt(0, anotherMock);
-	same(obj[0], anotherMock, "Another mock added at position 0");
-	same(obj[1], mockObj, "Mock moved 1 position");
+	this.obj.addAt(0, this.anotherMock);
+	same(this.obj[0], this.anotherMock, "Another mock added at position 0");
+	same(this.obj[1], this.mockObj, "Mock moved 1 position");
 	
-	var mockCollection = new WebZed.ObjectCollection();
-	obj.addAt(1, mockCollection);
-	same(obj[0], anotherMock, "Another mock is still at position 0");
-	same(obj[2], mockObj, "Mock moved to position 2");
-	same(obj[1], mockCollection, "Collection mock at position 1");
+	this.obj.addAt(1, this.mockCollection);
+	same(this.obj[0], this.anotherMock, "Another mock is still at position 0");
+	same(this.obj[2], this.mockObj, "Mock moved to position 2");
+	same(this.obj[1], this.mockCollection, "Collection mock at position 1");
 });
 
 test("AddBefore", 5, function(){
-	var obj = new WebZed.ObjectCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.ObjectCollection();
-	
-	obj.push(mockObj);
-	obj.push(anotherMock);
+	this.obj.push(this.mockObj);
+	this.obj.push(this.anotherMock);
 	
 	var thrown = false;
 	try {
-		obj.addBefore(mockCollection, anotherMock);		
+		this.obj.addBefore(this.mockCollection, this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "MockCollection is not in the collection yet");
 	
-	obj.addBefore(anotherMock, mockCollection);
-	same(obj[0], mockObj);
-	same(obj[1], mockCollection);
-	same(obj[2], anotherMock);
-	equals(obj.length, 3);
+	this.obj.addBefore(this.anotherMock, this.mockCollection);
+	same(this.obj[0], this.mockObj);
+	same(this.obj[1], this.mockCollection);
+	same(this.obj[2], this.anotherMock);
+	equals(this.obj.length, 3);
 });
 
 test("AddAfter", 5, function(){
-	var obj = new WebZed.ObjectCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.ObjectCollection();
-	
-	obj.push(mockObj);
-	obj.push(anotherMock);
+	this.obj.push(this.mockObj);
+	this.obj.push(this.anotherMock);
 	
 	var thrown = false;
 	try {
-		obj.addAfter(mockObj, anotherMock);		
+		this.obj.addAfter(this.mockObj, this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "MockCollection is not in the collection yet");
 	
-	obj.addBefore(anotherMock, mockCollection);
-	same(obj[0], mockObj);
-	same(obj[1], mockCollection);
-	same(obj[2], anotherMock);
-	equals(obj.length, 3);
+	this.obj.addBefore(this.anotherMock, this.mockCollection);
+	same(this.obj[0], this.mockObj);
+	same(this.obj[1], this.mockCollection);
+	same(this.obj[2], this.anotherMock);
+	equals(this.obj.length, 3);
 });
 
 test("Contains", 3, function(){
-	var obj = new WebZed.ObjectCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.ObjectCollection();
+	this.obj.push(this.mockObj);
+	this.obj.push(this.mockCollection);
 	
-	obj.push(mockObj);
-	obj.push(mockCollection);
-	
-	ok(obj.contains(mockObj));
-	ok(!obj.contains(anotherMock));
-	ok(obj.contains(mockCollection));
+	ok(this.obj.contains(this.mockObj));
+	ok(!this.obj.contains(this.anotherMock));
+	ok(this.obj.contains(this.mockCollection));
 });
 
 test("Remove", 3, function(){
-	var obj = new WebZed.ObjectCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.ObjectCollection();
-	
-	obj.push(mockObj);
-	obj.push(mockCollection);
+	this.obj.push(this.mockObj);
+	this.obj.push(this.mockCollection);
 	
 	var thrown = false;
 	try {
-		obj.remove(anotherMock);		
+		this.obj.remove(this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "anotherMock is not in the collection yet");
 	
-	ok(obj.contains(mockObj));
-	obj.remove(mockObj);
-	ok(!obj.contains(mockObj));
+	ok(this.obj.contains(this.mockObj));
+	this.obj.remove(this.mockObj);
+	ok(!this.obj.contains(this.mockObj));
 });
-
-})();
