@@ -1,14 +1,14 @@
 module("Sprite Behavior Frame");
 test("Construct", 3, function(){
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.SpriteBehaviorFrame("diagonal");
+		obj = new WebZed.SpriteBehaviorFrame("diagonal");
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "Direction should be SpriteBehaviorFrame.vertical or SpriteBehaviorFrame.horizontal");
 	
-	var obj = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal, 3);
+	obj = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal, 3);
 	equals(obj.direction, WebZed.SpriteBehaviorFrame.horizontal, "Direction set");
 	equals(obj.frame, 3, "Frame set");
 });
@@ -23,9 +23,9 @@ test("Update Sprite", function(){
 			width : 16,
 			height : 30
 		}
-	};
+	},
+	obj = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal, 3);
 	
-	var obj = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal, 3);
 	obj.updateSprite(mockSprite, {}, 300);
 	
 	equals(mockSprite.source_top, 0, "Top offset unchanged");

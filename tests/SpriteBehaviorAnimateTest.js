@@ -1,8 +1,8 @@
 module("Sprite Behavior Animate");
 test("Construct", 4, function(){
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.SpriteBehaviorAnimate("diagonal");
+		obj = new WebZed.SpriteBehaviorAnimate("diagonal");
 	} catch (e) {
 		thrown = true;
 	}
@@ -10,13 +10,13 @@ test("Construct", 4, function(){
 	
 	thrown = false;
 	try {
-		new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, "fast");
-	} catch (e) {
+		obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, "fast");
+	} catch (er) {
 		thrown = true;
 	}
 	ok(thrown, "Speed should be a number");
 	
-	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
+	obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
 	equals(obj.direction, WebZed.SpriteBehaviorAnimate.horizontal, "Direction set");
 	equals(obj.speed, 300, "Speed set");
 });
@@ -34,9 +34,9 @@ test("Update Sprite", 14, function(){
 		behaviors : {
 			remove : function() {this.args = arguments;}
 		}
-	};
+	},
 	
-	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
+	obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.horizontal, 300);
 	
 	// First time our behavior sees is 0 so the animation started at 0
 	obj.updateSprite(mockSprite, {}, 0);
@@ -94,13 +94,13 @@ test("Update Sprite Once", 11, function(){
 			remove : function() {this.args = arguments;}
 		}
 	},
-	mockDisplay = {};
-	
-	var once = function() {
+	mockDisplay = {},
+	once = function() {
 		once.args = arguments;
 		once.context = this;
-	};
-	var obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 10, once);
+	},
+	obj = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 10, once);
+	
 	obj.updateSprite(mockSprite, mockDisplay, 0);
 	ok(!once.args, "Once isn't called on first call");
 	obj.updateSprite(mockSprite, mockDisplay, 10);

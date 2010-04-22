@@ -9,9 +9,9 @@ module("Object Pool", {
 });
 
 test("throws an error on invalid target class", function() {
-	var thrown = false;
+	var thrown = false, obj;
 	try {
-		new WebZed.ObjectPool("");
+		obj = new WebZed.ObjectPool("");
 	} catch (e) {
 		thrown = true;
 	}
@@ -35,9 +35,9 @@ test("a recycled object has active set to false", function() {
 });
 
 test("an exeption is thrown if trying to recycle a recycled object", function() {
-	var obj = this.obj.create();
+	var obj = this.obj.create(), thrown;
 	this.obj.recycle(obj);
-	var thrown = false;
+	thrown = false;
 	try {
 		this.obj.recycle(obj);
 	} catch (e) {
@@ -71,9 +71,9 @@ test("augmented classes have a recycle method with just strip", function() {
 
 test("an exception is thrown when trying to recycle twice", function() {
 	this.obj.augment();
-	var obj = this.mockClass.create();
+	var obj = this.mockClass.create(), thrown;
 	obj.recycle();
-	var thrown = false;
+	thrown = false;
 	try {
 		obj.recycle();
 	} catch (e) {
@@ -83,9 +83,10 @@ test("an exception is thrown when trying to recycle twice", function() {
 });
 
 test("create recycle create will refurbish a object", function() {
-	var obj = this.obj.create();
+	var obj, obj2;
+	obj = this.obj.create();
 	this.obj.recycle(obj);
-	var obj2 = this.obj.create();
+	obj2 = this.obj.create();
 	
 	obj.test = "henk";
 	equals(obj2.test, "henk");

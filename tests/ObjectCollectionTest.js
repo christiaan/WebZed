@@ -73,16 +73,14 @@ test("Push", 10, function(){
 	ok(thrown, "Collection entries have to be unique");
 });
 
-test("Unshift", 6, function(){
+test("Unshift a mock object", function(){
 	this.obj.unshift(this.mockObj);
 	equals(this.obj.length, 1, "Mock is the only item");
 	same(this.obj[0], this.mockObj, "Mock is first item");
-	
-	this.obj.unshift(this.mockCollection);
-	equals(this.obj.length, 2, "We got 2 items now");
-	same(this.obj[1], this.mockObj, "Mock is 2nd item now");
-	same(this.obj[0], this.mockCollection, "Collection is the first item");
-	
+});
+
+test("Unshift a mock object twice will throw exception", function() {
+	this.obj.unshift(this.mockObj);
 	var thrown = false;
 	try {
 		this.obj.unshift(this.mockObj);
@@ -90,6 +88,14 @@ test("Unshift", 6, function(){
 		thrown = true;
 	}
 	ok(thrown, "Item has to be unique in the collection");
+});
+
+test("Unshift another Collection", function(){
+	this.obj.unshift(this.mockObj);
+	this.obj.unshift(this.mockCollection);
+	equals(this.obj.length, 2, "We got 2 items now");
+	same(this.obj[1], this.mockObj, "Mock is 2nd item now");
+	same(this.obj[0], this.mockCollection, "Collection is the first item");
 });
 
 test("AddAt", 8, function(){

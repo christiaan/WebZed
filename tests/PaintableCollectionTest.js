@@ -1,246 +1,236 @@
-(function(){
-var mockPaintable = {"paint" : function(){}};
-
-module("PaintableCollection");
-test("Constructor", 5, function(){
-	var thrown = false;
+module("PaintableCollection Constructor should");
+test("throw an error if first arg is no array", function(){
+	var thrown = false, obj;
 	try {
-		new WebZed.PaintableCollection({"paint" : function(){}});
+		obj = new WebZed.PaintableCollection({"paint" : function(){}});
 	} catch (e) {
 		thrown = true;
 	}
-	ok(thrown, "First arg should be a array");
-	
-	thrown = false;
-	try {
-		new WebZed.PaintableCollection([]);
-	} catch (e) {
-		thrown = true;
-	}
-	ok(!thrown, "works with an empty array");
-	
-	thrown = false;
-	try {
-		var obj = new WebZed.PaintableCollection();
-	} catch (e) {
-		thrown = true;
-	}
-	ok(!thrown, "All args are optional");
-	ok(obj instanceof Array, "Created Collection is also an Array");
-	
-	thrown = false;
-	try {
-		new WebZed.PaintableCollection(obj);
-	} catch (e) {
-		thrown = true;
-	}
-	ok(!thrown, "works with another PaintableCollection");
+	ok(thrown);
 });
 
-test("Push", 11, function(){
-	var obj = new WebZed.PaintableCollection();
+test("work with an empty array", function() {
+	var thrown = false, obj;
+	try {
+		obj = new WebZed.PaintableCollection([]);
+	} catch (e) {
+		thrown = true;
+	}
+	ok(!thrown);
+});
 	
+test("work without giving it any params", function() {
+	
+	var thrown = false, obj;
+	try {
+		obj = new WebZed.PaintableCollection();
+	} catch (e) {
+		thrown = true;
+	}
+	ok(!thrown);
+});
+
+test("work when given another Paintable collection", function() {
+	var thrown = false, obj;
+	try {
+		obj = new WebZed.PaintableCollection(obj);
+	} catch (e) {
+		thrown = true;
+	}
+	ok(!thrown);
+});
+
+
+module("PaintableCollection should", {
+	setup : function() {
+		this.mockPaintable = {"paint" : function(){this.args = arguments;}};
+		this.anotherMock = {"paint" : function(){this.args = arguments;}};
+		this.mockCollection = new WebZed.PaintableCollection();
+		this.obj = new WebZed.PaintableCollection();
+	}
+});
+
+test("throw error when given non PaintableInterface to push", function(){
 	var thrown = false;
 	try {
-		obj.push({});
+		this.obj.push({});
 	} catch (e)	{
 		thrown = true;
 	}
 	ok(thrown, "arg should implement PaintableInterface");
+});
 
-	thrown = false;
+test("be able to push mockPaintable", function() {
+	var thrown = false;
 	try {
-		obj.push(mockPaintable);
+		this.obj.push(this.mockPaintable);
 	} catch (e)	{
 		thrown = true;
 	}
-	equals(obj.length, 1, "paintables are accepted");
-	same(obj[0], mockPaintable, "mock is the first entry");
-	
-	var mockCollection = new WebZed.PaintableCollection();
-	obj.push(mockCollection);
-	equals(obj.length, 2, "Another Collection is accepted as well");
-	same(obj[1], mockCollection, "Collection is added at the end");
-	same(obj[0], mockPaintable, "mock is still the first entry");
-	
-	var newobj = new WebZed.PaintableCollection(obj);
-	equals(obj.length, 2, "On construct the paintables get pushed");
-	same(newobj, obj, "Constructing a new Collection with another collection result in the same contents");
-	same(obj[0], mockPaintable, "mock is still the first entry");
-	same(obj[1], mockCollection, "Collection is at the end");
-	
-	thrown = false;
-	try {
-		newobj.push(mockPaintable);
-	} catch(e) {
-		thrown = true;
-	}
-	ok(thrown, "Collection entries have to be unique");
+	equals(this.obj.length, 1, "paintables are accepted");
+	same(this.obj[0], this.mockPaintable, "mock is the first entry");
 });
 
-test("Unshift", 7, function(){
-	var obj = new WebZed.PaintableCollection();
+test("be able to push mockCollection", function() {
+	this.obj.push(this.mockPaintable);
+	this.obj.push(this.mockCollection);
+	equals(this.obj.length, 2, "Another Collection is accepted as well");
+	same(this.obj[1], this.mockCollection, "Collection is added at the end");
+	same(this.obj[0], this.mockPaintable, "mock is still the first entry");
+});
+	
+test("throw an error if when given non Paintable to push", function(){
+	var thrown = false;
+	try {
+		this.obj.unshift({});
+	} catch (e)	{
+		thrown = true;
+	}
+	ok(thrown);
+	
+});
+	
+test("accept a paintable when given to push and place it at the first pos", function() {
+	this.obj.unshift(this.mockPaintable);
+	equals(this.obj.length, 1, "Paintable is the only item");
+	same(this.obj[0], this.mockPaintable, "Paintable is first item");
+});
+
+test("succesfully pushes a paintable and another collection", function() {
+	
+	this.obj.unshift(this.mockPaintable);
+	this.obj.unshift(this.mockCollection);
+	equals(this.obj.length, 2, "We got 2 items now");
+	same(this.obj[1], this.mockPaintable, "Paintable is 2nd item now");
+	same(this.obj[0], this.mockCollection, "Collection is the first item");
+	
+});
+
+test("throw an error when given the same paintable twice", function() {
+	this.obj.unshift(this.mockPaintable);
 	
 	var thrown = false;
 	try {
-		obj.unshift({});
-	} catch (e)	{
-		thrown = true;
-	}
-	ok(thrown, "arg should implement PaintableInterface");
-	
-	obj.unshift(mockPaintable);
-	equals(obj.length, 1, "Paintable is the only item");
-	same(obj[0], mockPaintable, "Paintable is first item");
-	
-	var mockCollection = new WebZed.PaintableCollection();
-	obj.unshift(mockCollection);
-	equals(obj.length, 2, "We got 2 items now");
-	same(obj[1], mockPaintable, "Paintable is 2nd item now");
-	same(obj[0], mockCollection, "Collection is the first item");
-	
-	thrown = false;
-	try {
-		obj.unshift(mockPaintable);
+		this.obj.unshift(this.mockPaintable);
 	} catch (e) {
 		thrown = true;
 	}
-	ok(thrown, "Paintable has to be unique in the collection");
+	ok(thrown);
 });
 
-test("AddAt", 9, function(){
-	var obj = new WebZed.PaintableCollection();
-	
+test("throw an exception when AddAt' first param is no Number", function(){
 	var thrown = false;
 	try {
-		obj.addAt();
+		this.obj.addAt();
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "position should be a Number");
+});
 
-	thrown = false;
+test("throw an exception when AddAt's 2nd param is no paintable", function(){
+	var thrown = false;
 	try {
-		obj.addAt(mockPaintable);
-	} catch (e) {
-		thrown = true;
-	}
-	ok(thrown, "position should be a Number");
-	
-	thrown = false;
-	try {
-		obj.addAt(0, {});
+		this.obj.addAt(0, {});
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "paintable should implement PaintableInterface");
-	
-	obj.addAt(0, mockPaintable);
-	same(obj[0], mockPaintable, "Added at position 0");
-	
-	var anotherMock = {"paint" : function(){}};
-	obj.addAt(0, anotherMock);
-	same(obj[0], anotherMock, "Another mock added at position 0");
-	same(obj[1], mockPaintable, "Mock moved 1 position");
-	
-	var mockCollection = new WebZed.PaintableCollection();
-	obj.addAt(1, mockCollection);
-	same(obj[0], anotherMock, "Another mock is still at position 0");
-	same(obj[2], mockPaintable, "Mock moved to position 2");
-	same(obj[1], mockCollection, "Collection mock at position 1");
 });
 
-test("AddBefore", 5, function(){
-	var obj = new WebZed.PaintableCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.PaintableCollection();
-	
-	obj.push(mockPaintable);
-	obj.push(anotherMock);
+test("succesfully add a paintable at position 0 using addAt", function() {
+	this.obj.addAt(0, this.mockPaintable);
+	same(this.obj[0], this.mockPaintable, "Added at position 0");
+});
+
+test("succesfully add another paintable before the first using addAt", function() {
+	this.obj.addAt(0, this.mockPaintable);
+	this.obj.addAt(0, this.anotherMock);
+	same(this.obj[0], this.anotherMock, "Another mock added at position 0");
+	same(this.obj[1], this.mockPaintable, "Mock moved 1 position");
+});
+
+test("succesfully addAt a paintable collection between two paintables", function(){
+	this.obj.addAt(0, this.mockPaintable);
+	this.obj.addAt(0, this.anotherMock);
+	this.obj.addAt(1, this.mockCollection);
+	same(this.obj[0], this.anotherMock, "Another mock is still at position 0");
+	same(this.obj[2], this.mockPaintable, "Mock moved to position 2");
+	same(this.obj[1], this.mockCollection, "Collection mock at position 1");
+});
+
+test("succesfully add AddBefore anotherMock before mockCollecion", function(){
+	this.obj.push(this.mockPaintable);
+	this.obj.push(this.anotherMock);
 	
 	var thrown = false;
 	try {
-		obj.addBefore(mockCollection, anotherMock);		
+		this.obj.addBefore(this.mockCollection, this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "MockCollection is not in the collection yet");
 	
-	obj.addBefore(anotherMock, mockCollection);
-	same(obj[0], mockPaintable);
-	same(obj[1], mockCollection);
-	same(obj[2], anotherMock);
-	equals(obj.length, 3);
+	this.obj.addBefore(this.anotherMock, this.mockCollection);
+	same(this.obj[0], this.mockPaintable);
+	same(this.obj[1], this.mockCollection);
+	same(this.obj[2], this.anotherMock);
+	equals(this.obj.length, 3);
 });
 
-test("AddAfter", 5, function(){
-	var obj = new WebZed.PaintableCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.PaintableCollection();
-	
-	obj.push(mockPaintable);
-	obj.push(anotherMock);
+test("AddAfter", function(){
+	this.obj.push(this.mockPaintable);
+	this.obj.push(this.anotherMock);
 	
 	var thrown = false;
 	try {
-		obj.addAfter(mockPaintable, anotherMock);		
+		this.obj.addAfter(this.mockPaintable, this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "MockCollection is not in the collection yet");
 	
-	obj.addBefore(anotherMock, mockCollection);
-	same(obj[0], mockPaintable);
-	same(obj[1], mockCollection);
-	same(obj[2], anotherMock);
-	equals(obj.length, 3);
+	this.obj.addBefore(this.anotherMock, this.mockCollection);
+	same(this.obj[0], this.mockPaintable);
+	same(this.obj[1], this.mockCollection);
+	same(this.obj[2], this.anotherMock);
+	equals(this.obj.length, 3);
 });
 
-test("Contains", 3, function(){
-	var obj = new WebZed.PaintableCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.PaintableCollection();
+test("Contains", function(){
+	this.obj.push(this.mockPaintable);
+	this.obj.push(this.mockCollection);
 	
-	obj.push(mockPaintable);
-	obj.push(mockCollection);
-	
-	ok(obj.contains(mockPaintable));
-	ok(!obj.contains(anotherMock));
-	ok(obj.contains(mockCollection));
+	ok(this.obj.contains(this.mockPaintable));
+	ok(!this.obj.contains(this.anotherMock));
+	ok(this.obj.contains(this.mockCollection));
 });
 
 test("Remove", 3, function(){
-	var obj = new WebZed.PaintableCollection();
-	var anotherMock = {"paint" : function(){}};
-	var mockCollection = new WebZed.PaintableCollection();
-	
-	obj.push(mockPaintable);
-	obj.push(mockCollection);
+	this.obj.push(this.mockPaintable);
+	this.obj.push(this.mockCollection);
 	
 	var thrown = false;
 	try {
-		obj.remove(anotherMock);		
+		this.obj.remove(this.anotherMock);		
 	} catch (e) {
 		thrown = true;
 	}
 	ok(thrown, "anotherMock is not in the collection yet");
 	
-	ok(obj.contains(mockPaintable));
-	obj.remove(mockPaintable);
-	ok(!obj.contains(mockPaintable));
+	ok(this.obj.contains(this.mockPaintable));
+	this.obj.remove(this.mockPaintable);
+	ok(!this.obj.contains(this.mockPaintable));
 });
 
 test("Paint", 4, function(){
-	var obj = new WebZed.PaintableCollection();
-	var anotherMock = {"paint" : function(){this.args = arguments;}};
 	var displayMock = {};
 		
-	obj.unshift(anotherMock);
-	equals(obj.length, 1);
-	obj.paint(10, displayMock);
+	this.obj.unshift(this.anotherMock);
+	equals(this.obj.length, 1);
+	this.obj.paint(10, displayMock);
 	
-	equals(anotherMock.args.length, 2);
-	equals(anotherMock.args[0], 10);
-	same(anotherMock.args[1], displayMock);
+	equals(this.anotherMock.args.length, 2);
+	equals(this.anotherMock.args[0], 10);
+	same(this.anotherMock.args[1], displayMock);
 });
-})();

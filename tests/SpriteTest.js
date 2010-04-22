@@ -98,8 +98,10 @@ test("Constructor", 14, function(){
 	equals(obj.children.length, 0, "Children is empty by default");
 });
 
-test("Paint", 26, function(){
-	var obj = new WebZed.Sprite(this.imgSrc, 200, 300, undefined, this.onpaint);
+test("Paint", 22, function(){
+	var obj, mockChild;
+	
+	obj = new WebZed.Sprite(this.imgSrc, 200, 300, undefined, this.onpaint);
 	
 	obj.paint(this.mockDisplay, 0);
 	same(this.mockDisplay.args[0], this.mockImg, "First arg should be the image node");
@@ -116,33 +118,17 @@ test("Paint", 26, function(){
 	equals(this.onpaint.args[2], undefined, "3th the left offset");
 	equals(this.onpaint.args[3], undefined, "4th the top offset");
 	
-	var animBehavior = new WebZed.SpriteBehaviorAnimate(WebZed.SpriteBehaviorAnimate.vertical, 1000);
-	obj.behaviors.push(animBehavior);
+	obj.source_top = 32;
 	obj.paint(this.mockDisplay, 0);
-	obj.paint(this.mockDisplay, 1000);
-	equals(this.mockDisplay.args[6], 32, "default animation axis is vertical the source top offset should be to the next frame");
+	equals(this.mockDisplay.args[6], 32, "Source Top gets passed");
 	
-	var frameBehavior = new WebZed.SpriteBehaviorFrame(WebZed.SpriteBehaviorFrame.horizontal);
-	obj.behaviors.push(frameBehavior);
-	frameBehavior.frame = 1;
-	
+	obj.source_left = 64;
 	obj.paint(this.mockDisplay, 2000);
-	equals(this.mockDisplay.args[5], 16, "At the 2nd frame");
-	equals(this.mockDisplay.args[6], 64, "And at the 3th frame of the animation");
+	equals(this.mockDisplay.args[5], 64, "Source Left gets passed");
 	
-	
-	animBehavior.direction = WebZed.SpriteBehaviorAnimate.horizontal;
-	frameBehavior.direction = WebZed.SpriteBehaviorFrame.vertical;
-	
-	obj.paint(this.mockDisplay, 1000);
-	equals(this.mockDisplay.args[5], 16, "axis set to horizontal the source left offset should be to the next frame");
-	obj.paint(this.mockDisplay, 2000);
-	equals(this.mockDisplay.args[6], 32, "At the 2nd frame");
-	equals(this.mockDisplay.args[5], 32, "And at the 3th frame of the animation");
-	obj.image.direction = WebZed.ImageSource.vertical;
 	
 	// Check if the child sprites get correctly called
-	var mockChild = {"paint" : function(){this.args = arguments;}};
+	mockChild = {"paint" : function(){this.args = arguments;}};
 	obj.children.push(mockChild);
 	obj.paint(this.mockDisplay, 4000);
 	same(mockChild.args[0], this.mockDisplay, "Same display as parent");
@@ -188,8 +174,9 @@ test("InViewport", 9, function() {
 });
 
 test("CollidesWith", function() {
-	var obj = new WebZed.Sprite(this.imgSrc, 10, 10);
-	var obj2 = new WebZed.Sprite(this.imgSrc, 200, 300);
+	var obj, obj2;
+	obj = new WebZed.Sprite(this.imgSrc, 10, 10);
+	obj2 = new WebZed.Sprite(this.imgSrc, 200, 300);
 	
 	ok(obj.collidesWith([obj2]).length === 0, "No collision");
 	obj.left = 208;
