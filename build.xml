@@ -8,18 +8,14 @@
 		<echo message="Building WebZed" />
 		<mkdir dir="${dist}" />
 		<concat destfile="${WZ}">
-			<fileset file="src/intro.js" />
+			<fileset file="src/intro" />
 			
-			<fileset file="src/WebZed.js" />
-			<fileset file="src/Interval.js" />
-			<fileset file="src/Canvas.js" />
-			<fileset file="src/ObjectPool.js" />
-			<fileset file="src/ObjectCollection.js" />
+			<fileset file="src/*.js" />
+			<fileset file="src/Paintable/*.js" />
 			<fileset file="src/Display/*.js" />
 			<fileset file="src/Map/*.js" />
-			<fileset file="src/Paintable/*.js" />
 			
-			<fileset file="src/outro.js" />
+			<fileset file="src/outro" />
 		</concat>
 		<replaceregexp match="@VERSION" replace="${version}"
 			flags="g" byline="true" file="${WZ}" />
@@ -27,5 +23,12 @@
 			file="${WZ}" />
 		<echo message="${WZ} built." />
 	</target>
+	
+    <target name="test" depends="webzed" description="Run tests">
+    	<java jar="/home/christiaan/sources/JsTestDriver-1.2.1.jar" fork="true" dir=".">
+    		<arg value="--tests"/>
+    		<arg value="all"/>
+    	</java>
+    </target>
 
 </project>

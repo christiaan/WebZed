@@ -1,122 +1,5 @@
 var WebZed = (function(){
 var WebZed = {};
-WebZed.bind = function (obj, func) {
-	if(func.constructor === String) {
-		func = obj[func];
-	}
-	if(!(func instanceof Function)) {
-		throw new TypeError("func should be a Function");
-	}
-	return function() {
-		return func.apply(obj, arguments);
-	};
-};
-/**
- * Originally from the js design patterns book
- * @link http://jsdesignpatterns.com/
- * @constructor
- */
-WebZed.Interface = function (name, methods) {
-    if (arguments.length !== 2) {
-        throw new Error("Interface constructor called with "+arguments.length+
-			" arguments, but expected exactly 2.");
-    }
-
-    this.name = name;
-    this.methods = [];
-    for (var i = 0, len = methods.length; i < len; i += 1) {
-        if (typeof methods[i] !== 'string') {
-            throw new Error("Interface constructor expects method names to be "+
-				"passed in as a string.");
-        }
-    }
-	this.methods = methods;
-};
-
-WebZed.Interface.ensureImplements = function(object) {
-	var i, interf, j, method;
-    if (arguments.length < 2) {
-        throw new Error("Function Interface.ensureImplements called with " +
-          arguments.length  + "arguments, but expected at least 2.");
-    }
-
-    for (i = 1; i < arguments.length; i += 1) {
-        interf = arguments[i];
-        if (interf.constructor !== WebZed.Interface) {
-            throw new Error("Function Interface.ensureImplements expects "+
-				"arguments two and above to be instances of Interface.");
-        }
-
-        for (j = 0; j < interf.methods.length; j += 1) {
-            method = interf.methods[j];
-            if (!object[method] || typeof object[method] !== 'function') {
-                throw new TypeError("Function Interface.ensureImplements: object "+
-					"does not implement the " + interf.name+
-					" interface. Method " + method + " was not found.");
-            }
-        }
-    }
-};
-/**
- * Interval class
- * 
- * @param {Function} callback
- * @param {Number} delay
- * @param {Number} elapsed
- * @constructor
- */
-WebZed.Interval = function (callback, delay, elapsed) {
-	if (!(callback instanceof Function)) {
-		throw new TypeError("callback should be a Function");
-	}
-	if (delay.constructor !== Number) {
-		throw new TypeError("delay should be a Number");
-	}
-	if (elapsed && elapsed.constructor !== Number) {
-		throw new TypeError("elapsed should be a Number");
-	}
-	
-	this.callback = callback;
-	this.delay = delay;
-	
-	this.elapsed = elapsed || 0;
-	
-	this.started = false;
-	this.interval = null;
-};
-
-WebZed.Interval.prototype = {
-	/**
-	 * Starts the interval
-	 * @return void
-	 */
-	start : function () {
-		this.started = true;
-		this.interval = setInterval(WebZed.bind(this, "update"), this.delay);
-		return null;
-	},
-	/**
-	 * Stops the interval
-	 * @return void
-	 */
-	stop : function () {
-		if (!this.started) {
-			throw new Error("Interval not started");
-		}
-		clearInterval(this.interval);
-		this.started = false;
-		return null;
-	},
-	/**
-	 * Ran on each interval tick
-	 * @param overdue amount of milliseconds off from the desired delay
-	 * @return void
-	 */
-	update : function (overdue) {
-		this.elapsed += (this.delay + overdue);
-		this.callback(this.elapsed);
-	}
-};
 /**
  * Canvas wrapper class
  * @param {Number} width
@@ -230,90 +113,110 @@ WebZed.Canvas.prototype = {
 	}
 };
 /**
- * ObjectPool for the recycling of objects
- *
- * Classes with a short livespan benefit from this, it reuses
- * objects instead of generating new ones each time and having the
- * garbage collector cleaning up all unreferenced old objects
- * @param {Function} objectClass Constructor of the host class
- * @return void
+ * Originally from the js design patterns book
+ * @link http://jsdesignpatterns.com/
+ * @constructor
  */
-WebZed.ObjectPool = function (objectClass) {
-	if (!(objectClass instanceof Function)) {
-		throw new TypeError("objectClass should be of type Function");
-	}
+WebZed.Interface = function (name, methods) {
+    if (arguments.length !== 2) {
+        throw new Error("Interface constructor called with "+arguments.length+
+			" arguments, but expected exactly 2.");
+    }
 
-	this.objectClass = objectClass;
-	this.pool = [];
+    this.name = name;
+    this.methods = [];
+    for (var i = 0, len = methods.length; i < len; i += 1) {
+        if (typeof methods[i] !== 'string') {
+            throw new Error("Interface constructor expects method names to be "+
+				"passed in as a string.");
+        }
+    }
+	this.methods = methods;
 };
 
+WebZed.Interface.ensureImplements = function(object) {
+	var i, interf, j, method;
+    if (arguments.length < 2) {
+        throw new Error("Function Interface.ensureImplements called with " +
+          arguments.length  + "arguments, but expected at least 2.");
+    }
+
+    for (i = 1; i < arguments.length; i += 1) {
+        interf = arguments[i];
+        if (interf.constructor !== WebZed.Interface) {
+            throw new Error("Function Interface.ensureImplements expects "+
+				"arguments two and above to be instances of Interface.");
+        }
+
+        for (j = 0; j < interf.methods.length; j += 1) {
+            method = interf.methods[j];
+            if (!object[method] || typeof object[method] !== 'function') {
+                throw new TypeError("Function Interface.ensureImplements: object "+
+					"does not implement the " + interf.name+
+					" interface. Method " + method + " was not found.");
+            }
+        }
+    }
+};
 /**
- * Returns a objectClass instance either recycling an old one or creating
- * a new one if no old instances are available
- * @param [argN] any args passed to the object constructor
- * @return {Object} Object of type objectClass
+ * Interval class
+ * 
+ * @param {Function} callback
+ * @param {Number} delay
+ * @param {Number} elapsed
+ * @constructor
  */
-WebZed.ObjectPool.prototype.create = function () {
-	var obj;
-	if (this.pool.length) {
-		obj = this.pool.pop();
-		this.objectClass.apply(obj, arguments);
+WebZed.Interval = function (callback, delay, elapsed) {
+	if (!(callback instanceof Function)) {
+		throw new TypeError("callback should be a Function");
 	}
-	else {
-		obj = this.createNew(arguments);
+	if (delay.constructor !== Number) {
+		throw new TypeError("delay should be a Number");
+	}
+	if (elapsed && elapsed.constructor !== Number) {
+		throw new TypeError("elapsed should be a Number");
 	}
 	
-	obj.active = true;
-	return obj;
-};
-
-/**
- * Creates a new objectClass instance
- * @param {Array} args
- * @return {Object} new instance of type objectClass
- */
-WebZed.ObjectPool.prototype.createNew = function (args) {
-	// there is no way to do a new SomeClass with an array
-	// as arguments so we create a function to do just that
-	for (var argParams = [], i = 0, len = args.length; i < len; i += 1) {
-		argParams.push("a[" + i + "]");
-	}
+	this.callback = callback;
+	this.delay = delay;
 	
-	return (new Function("c", "a",
-		"return new c(" + argParams.join(",") + ");")(this.objectClass, args));
+	this.elapsed = elapsed || 0;
+	
+	this.started = false;
+	this.interval = null;
 };
 
-/**
- * Recycle a object putting it in the pool to be used for a next create call
- * @param {Object} obj Object to recycle
- * @param {Bool}strip
- * @return void
- */
-WebZed.ObjectPool.prototype.recycle = function (obj, strip) {
-	if (!obj.active) {
-		throw new Error("Object is already recycled");
-	}
-	if (strip) {
-		for (var prop in obj) {
-			if (obj.hasOwnProperty(prop)) {
-				delete obj[prop];
-			}
+WebZed.Interval.prototype = {
+	/**
+	 * Starts the interval
+	 * @return void
+	 */
+	start : function () {
+		this.started = true;
+		this.interval = setInterval(WebZed.bind(this, "update"), this.delay);
+		return null;
+	},
+	/**
+	 * Stops the interval
+	 * @return void
+	 */
+	stop : function () {
+		if (!this.started) {
+			throw new Error("Interval not started");
 		}
+		clearInterval(this.interval);
+		this.started = false;
+		return null;
+	},
+	/**
+	 * Ran on each interval tick
+	 * @param overdue amount of milliseconds off from the desired delay
+	 * @return void
+	 */
+	update : function (overdue) {
+		this.elapsed += (this.delay + overdue);
+		this.callback(this.elapsed);
 	}
-	obj.active = false;
-	this.pool.push(obj);
-};
-
-/**
- * Augment the objectClass with a create and recycle method
- * @return void
- */
-WebZed.ObjectPool.prototype.augment = function () {
-	var pool = this;
-	this.objectClass.create = WebZed.bind(this, "create");
-	this.objectClass.prototype.recycle = function (strip) {
-		pool.recycle(this, strip);
-	};
 };
 /**
  * A array in which all entries should be unique and some extra methods
@@ -422,132 +325,103 @@ WebZed.ObjectCollection.prototype.contains = function (item) {
 	return this.indexOf(item) !== -1;
 };
 /**
- * A Display implemented with Canvas
- * @constructor
- * @type DisplayInterface
- * @param {Number} width
- * @param {Number} height
- * @param {String} bgcolor
- * @param {Canvas} canvas
+ * ObjectPool for the recycling of objects
+ *
+ * Classes with a short livespan benefit from this, it reuses
+ * objects instead of generating new ones each time and having the
+ * garbage collector cleaning up all unreferenced old objects
+ * @param {Function} objectClass Constructor of the host class
+ * @return void
  */
-WebZed.CanvasDisplay = function (width, height, bgcolor, canvas) {
-	this.width = width;
-	this.height = height;
-	this.canvas = canvas || new WebZed.Canvas(width, height);
-	this.bgcolor = bgcolor;
+WebZed.ObjectPool = function (objectClass) {
+	if (!(objectClass instanceof Function)) {
+		throw new TypeError("objectClass should be of type Function");
+	}
+
+	this.objectClass = objectClass;
+	this.pool = [];
 };
 
-WebZed.CanvasDisplay.prototype = {
-	/**
-	 * Called before a paint run
-	 */
-	paintStart : function () {
-		this.canvas.fill(this.bgcolor);
-	},
-	/**
-	 * Called after a paint run
-	 */
-	paintEnd : function () {
-		// if we're using a back buffer we can copy it to the output here
-	},
-	paintImage : function (node, left, top, width, height, sourceLeft, sourceTop) {
-		return this.canvas.drawImage(node, left, top, width, height, sourceLeft, sourceTop);
+/**
+ * Returns a objectClass instance either recycling an old one or creating
+ * a new one if no old instances are available
+ * @param [argN] any args passed to the object constructor
+ * @return {Object} Object of type objectClass
+ */
+WebZed.ObjectPool.prototype.create = function () {
+	var obj;
+	if (this.pool.length) {
+		obj = this.pool.pop();
+		this.objectClass.apply(obj, arguments);
 	}
-};
-WebZed.DisplayInterface = new WebZed.Interface("DisplayInterface", [
-	"paintStart", /**/
-	"paintEnd", /**/
-	"paintImage" /* node, left, top, width, height, source_left, source_top */
-]);
-WebZed.Map = function (width, height, tileWidth, tileHeight, tiles, tilesets) {
-	var i, count = 0;
-	
-	if (width * height !== tiles.length) {
-		throw new Error("Not enough tiles to fill the map with");
-	}
-		
-	for (i = 0; i < tilesets.length; i += 1) {
-		count += (tilesets[i].width / tileWidth) *
-			(tilesets[i].height / tileHeight);
+	else {
+		obj = this.createNew(arguments);
 	}
 	
-	for (i = 0; i < tiles.length; i += 1) {
-		if (tiles[i] > count) {
-			throw new Error("Tileset missing for tile with gid " + tiles[i]);
-		}
-	}
-	
-	this.width = width;
-	this.height = height;
-	this.tileWidth = tileWidth;
-	this.tileHeight = tileHeight;
-	
-	this.tiles = tiles;
-	this.tilesets = tilesets;
+	obj.active = true;
+	return obj;
 };
 
-WebZed.Map.prototype = {
-	paintTile: function (left, top, display, leftOffset, topOffset) {
-		var gid = this.tiles[(top * this.width) + left],
-		srcNode, srcLeft, srcTop, t, tileset, tilesetWidth, count;
-		if (!gid) {
-			return;
-		}
-		
-		for (t = 0; t < this.tilesets.length; t += 1) {
-			tileset = this.tilesets[t];
-			tilesetWidth = (tileset.width / this.tileWidth);
-			count = (tilesetWidth * (tileset.height / this.tileHeight));
-			if (gid > count) {
-				gid -= count;
-				srcNode = false;
-			}
-			else {
-				srcNode = tileset;
-				srcLeft = (gid % tilesetWidth) * this.tileWidth;
-				srcTop = Math.floor(gid / tilesetWidth) * this.tileHeight;
-			}
-		}
-		
-		if (!srcNode) {
-			throw new Error("no tileset found for gid " + gid);
-		}
-		display.paintImage(srcNode, leftOffset, topOffset,
-			this.tileWidth, this.tileHeight, srcLeft, srcTop);
-	}
-};
-WebZed.MapViewFull = function (map, display) {
-	
-	if (map.width * map.tileWidth !== display.width) {
-		throw new Error("display width should correspond with map width");
-	}
-	if (map.height * map.tileHeight !== display.height) {
-		throw new Error("display height should correspond with map height");
+/**
+ * Creates a new objectClass instance
+ * @param {Array} args
+ * @return {Object} new instance of type objectClass
+ */
+WebZed.ObjectPool.prototype.createNew = function (args) {
+	// there is no way to do a new SomeClass with an array
+	// as arguments so we create a function to do just that
+	for (var argParams = [], i = 0, len = args.length; i < len; i += 1) {
+		argParams.push("a[" + i + "]");
 	}
 	
-	this.map = map;
-	this.display = display;
+	return (new Function("c", "a",
+		"return new c(" + argParams.join(",") + ");")(this.objectClass, args));
 };
 
-WebZed.MapViewFull.prototype = {
-	/**
-	 * Paint tiles on the canvas 
-	 */
-	paintMap : function () {
-		var y, x;
-	
-		this.display.paintStart();
-		for (y = 0; y < this.map.height; y += 1) {
-			for (x = 0; x < this.map.width; x += 1) {
-				this.map.paintTile(
-					x, y, this.display,
-					x * this.map.tileWidth,
-					y * this.map.tileHeight);
+/**
+ * Recycle a object putting it in the pool to be used for a next create call
+ * @param {Object} obj Object to recycle
+ * @param {Bool}strip
+ * @return void
+ */
+WebZed.ObjectPool.prototype.recycle = function (obj, strip) {
+	if (!obj.active) {
+		throw new Error("Object is already recycled");
+	}
+	if (strip) {
+		for (var prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				delete obj[prop];
 			}
 		}
-		this.display.paintEnd();
-	}	
+	}
+	obj.active = false;
+	this.pool.push(obj);
 };
+
+/**
+ * Augment the objectClass with a create and recycle method
+ * @return void
+ */
+WebZed.ObjectPool.prototype.augment = function () {
+	var pool = this;
+	this.objectClass.create = WebZed.bind(this, "create");
+	this.objectClass.prototype.recycle = function (strip) {
+		pool.recycle(this, strip);
+	};
+};
+WebZed.bind = function (obj, func) {
+	if(func.constructor === String) {
+		func = obj[func];
+	}
+	if(!(func instanceof Function)) {
+		throw new TypeError("func should be a Function");
+	}
+	return function() {
+		return func.apply(obj, arguments);
+	};
+};
+
 /**
  * ImageSource class
  * 
@@ -932,6 +806,133 @@ WebZed.SpriteBehaviorFrame.prototype = {
 WebZed.SpriteBehaviorInterface = new WebZed.Interface("SpriteBehaviorInterface", [
 	"updateSprite"
 ]);
+/**
+ * A Display implemented with Canvas
+ * @constructor
+ * @type DisplayInterface
+ * @param {Number} width
+ * @param {Number} height
+ * @param {String} bgcolor
+ * @param {Canvas} canvas
+ */
+WebZed.CanvasDisplay = function (width, height, bgcolor, canvas) {
+	this.width = width;
+	this.height = height;
+	this.canvas = canvas || new WebZed.Canvas(width, height);
+	this.bgcolor = bgcolor;
+};
+
+WebZed.CanvasDisplay.prototype = {
+	/**
+	 * Called before a paint run
+	 */
+	paintStart : function () {
+		this.canvas.fill(this.bgcolor);
+	},
+	/**
+	 * Called after a paint run
+	 */
+	paintEnd : function () {
+		// if we're using a back buffer we can copy it to the output here
+	},
+	paintImage : function (node, left, top, width, height, sourceLeft, sourceTop) {
+		return this.canvas.drawImage(node, left, top, width, height, sourceLeft, sourceTop);
+	}
+};
+WebZed.DisplayInterface = new WebZed.Interface("DisplayInterface", [
+	"paintStart", /**/
+	"paintEnd", /**/
+	"paintImage" /* node, left, top, width, height, source_left, source_top */
+]);
+WebZed.Map = function (width, height, tileWidth, tileHeight, tiles, tilesets) {
+	var i, count = 0;
+	
+	if (width * height !== tiles.length) {
+		throw new Error("Not enough tiles to fill the map with");
+	}
+		
+	for (i = 0; i < tilesets.length; i += 1) {
+		count += (tilesets[i].width / tileWidth) *
+			(tilesets[i].height / tileHeight);
+	}
+	
+	for (i = 0; i < tiles.length; i += 1) {
+		if (tiles[i] > count) {
+			throw new Error("Tileset missing for tile with gid " + tiles[i]);
+		}
+	}
+	
+	this.width = width;
+	this.height = height;
+	this.tileWidth = tileWidth;
+	this.tileHeight = tileHeight;
+	
+	this.tiles = tiles;
+	this.tilesets = tilesets;
+};
+
+WebZed.Map.prototype = {
+	paintTile: function (left, top, display, leftOffset, topOffset) {
+		var gid = this.tiles[(top * this.width) + left],
+		srcNode, srcLeft, srcTop, t, tileset, tilesetWidth, count;
+		if (!gid) {
+			return;
+		}
+		
+		for (t = 0; t < this.tilesets.length; t += 1) {
+			tileset = this.tilesets[t];
+			tilesetWidth = (tileset.width / this.tileWidth);
+			count = (tilesetWidth * (tileset.height / this.tileHeight));
+			if (gid > count) {
+				gid -= count;
+				srcNode = false;
+			}
+			else {
+				srcNode = tileset;
+				srcLeft = (gid % tilesetWidth) * this.tileWidth;
+				srcTop = Math.floor(gid / tilesetWidth) * this.tileHeight;
+			}
+		}
+		
+		if (!srcNode) {
+			throw new Error("no tileset found for gid " + gid);
+		}
+		display.paintImage(srcNode, leftOffset, topOffset,
+			this.tileWidth, this.tileHeight, srcLeft, srcTop);
+	}
+};
+WebZed.MapViewFull = function (map, display) {
+	
+	if (map.width * map.tileWidth !== display.width) {
+		throw new Error("display width should correspond with map width");
+	}
+	if (map.height * map.tileHeight !== display.height) {
+		throw new Error("display height should correspond with map height");
+	}
+	
+	this.map = map;
+	this.display = display;
+};
+
+WebZed.MapViewFull.prototype = {
+	/**
+	 * Paint tiles on the canvas 
+	 */
+	paintMap : function () {
+		var y, x;
+	
+		this.display.paintStart();
+		for (y = 0; y < this.map.height; y += 1) {
+			for (x = 0; x < this.map.width; x += 1) {
+				this.map.paintTile(
+					x, y, this.display,
+					x * this.map.tileWidth,
+					y * this.map.tileHeight);
+			}
+		}
+		this.display.paintEnd();
+	}	
+};
 
 return WebZed;
 }());
